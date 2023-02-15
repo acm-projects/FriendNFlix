@@ -7,8 +7,6 @@
 # FriendNFlix
 Netflix is one of the most common and popular entertainment platforms currently available. Many of us use Netflix, but sometimes it's difficult to know what to   watch. Enter FriendNFlix. FriendNFlix is a social app that allows you and your friends to share what you're watching or have already watched on Netflix and allows you and your friends to find new things to watch.
 
-# Summary
-
 # MVP
 
 * Social Interface that allows you to add friends and make your own user profile
@@ -82,4 +80,13 @@ Frontend AND Backend
   - [Google Calendar w/ Firebase Authentication](https://www.youtube.com/watch?v=Bj15-6rBHQw)
   - [Add Firebase to Android](https://firebase.google.com/docs/android/setup)
   - [Flutter & Firebase](https://www.youtube.com/watch?v=sfA3NWDBPZ4&list=PL4cUxeGkcC9j--TKIdkb3ISfRbJeJYQwC)
-
+  
+  # Meet the Team
+  * Frontend
+    * Avanthi Reddy
+    * Sambi Singh
+  * Backend
+    * Evan Wright
+    * Byron Rodas
+  * Project Manager: Abis Naqvi
+  * Industry Mentor: Temitope Oladipo
