@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -82,11 +83,21 @@ class _LoginPageState extends State<LoginPage> {
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
-                  onPressed: (){}, // button does nothing for now
+                  onPressed: () {
+                    FirebaseAuth.instance.signInWithEmailAndPassword(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim()
+                    );
+                  }, // button does nothing for now
                   child: Text('Login')),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent),
-                  onPressed: (){}, // this button also does nothing for now
+                  onPressed: (){
+                    FirebaseAuth.instance.createUserWithEmailAndPassword(
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim()
+                    );
+                  }, // this button also does nothing for now
                   child: Text('Signup')),
             ],
           ),
