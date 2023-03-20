@@ -49,6 +49,9 @@ class Home extends StatelessWidget {
             Container(
               height: 70,
               color: Color(0xFFAF3037),
+
+
+
             ),
 
             SizedBox(height: 30),
