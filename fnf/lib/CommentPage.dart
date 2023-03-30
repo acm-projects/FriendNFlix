@@ -111,6 +111,7 @@ class Comments extends StatelessWidget {
             decoration: InputDecoration(
               suffixIcon: IconButton(
                 ichyon: Icon(Icons.send),
+                icon: Icon(Icons.send),
                 onPressed: (){},
               ),
               hintText: "Write a comment",
