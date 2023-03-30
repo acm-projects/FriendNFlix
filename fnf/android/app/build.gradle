@@ -62,6 +62,7 @@ android {
         //minSdkVersion flutter.minSdkVersion
         //minSdkVersion localProperties.getProperty('flutter.minSdkVersion') // test to see if minSdkVersion can be modified
         minSdkVersion 19    // above line works the same but this way is simpler, keeps in one place
+        multiDexEnabled true
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -84,4 +85,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:31.2.0')  // firebase integration
     implementation 'com.google.firebase:firebase-analytics-ktx'     // firebase integration
+    implementation 'com.android.support:multidex:1.0.3'
 }

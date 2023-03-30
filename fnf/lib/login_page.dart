@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fnf/services/auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,6 +11,8 @@ class LoginPage extends StatefulWidget {
 
 
 class _LoginPageState extends State<LoginPage> {
+
+  final AuthService _auth = AuthService();
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -83,21 +86,27 @@ class _LoginPageState extends State<LoginPage> {
               ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
-                  onPressed: () {
+                  onPressed: () async {
+                    /*
                     FirebaseAuth.instance.signInWithEmailAndPassword(
                         email: emailController.text.trim(),
                         password: passwordController.text.trim()
                     );
-                  }, // button does nothing for now
+                    */
+                    dynamic result = await _auth.signIn(emailController.text.trim(), passwordController.text.trim());
+                  },
                   child: Text('Login')),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent),
-                  onPressed: (){
-                    FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  onPressed: () async{
+                    dynamic result = await _auth.registerWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim());
+
+                    /*FirebaseAuth.instance.createUserWithEmailAndPassword(
                         email: emailController.text.trim(),
                         password: passwordController.text.trim()
                     );
-                  }, // this button also does nothing for now
+                    */
+                  },
                   child: Text('Signup')),
             ],
           ),
