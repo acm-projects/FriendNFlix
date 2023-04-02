@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: _title,
       home: Scaffold(
-        backgroundColor: const Color(0xFFB20710), // set background to the shade of red here
+        backgroundColor: const Color(0xFFAF3037), // set background to the shade of red here
         body: const MyStatefulWidget(),
       ),
     );
@@ -38,12 +38,19 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         child: ListView(
           children: <Widget>[
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.28, // move everything down by 20%
+              height: MediaQuery.of(context).size.height * 0.02, // move everything down by 20%
+            ),
+
+            Container(
+              width: 320, // set width
+              height: 320,
+              child: Image.asset('assets/images/logo1.png'),
             ),
 
             Container(
               alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(10, 1, 10, 10),
+              //padding: const EdgeInsets.all(10),
               child: const Text(
                 'LOGIN',
                 style: TextStyle(
