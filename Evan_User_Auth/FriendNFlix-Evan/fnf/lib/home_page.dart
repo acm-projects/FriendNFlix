@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fnf/fnf/posts_index.dart';
 
 import 'fnf/Calendar.dart';
+import 'fnf/CreatePost1.dart';
 import 'fnf/test_firestore_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -48,6 +49,19 @@ class HomePage extends StatelessWidget {
               }, // todo onPressed functionality
               child: Text(
                   'Create Post'
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.tealAccent),
+              onPressed: () {
+                print("User wants to create a post!");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CreatePost1()),
+                );
+              }, // todo onPressed functionality
+              child: Text(
+                  'REAL Create a Post'
               ),
             ),
             ElevatedButton(

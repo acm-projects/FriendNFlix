@@ -116,6 +116,7 @@ class _CreatePostPageState extends State<CreatePostPage> {
 
                   PostMethods postMethods = PostMethods();
                   var result = await postMethods.addPostToFirestore(newPost);
+
                   print(result);
                   Navigator.pop(context);
 
