@@ -19,12 +19,41 @@ class DatabaseService {
   }
  */
 
+  // honestly i think i need someone to hold my hand on these wtf is this data manip
+  Future getFollowers(String givenUserID) async {
+
+
+  }
+  Future getFollowing(String givenUserID) async {
+
+
+  }
+
   Future unfollow(String givenUserId) async {
-    // pass in user id of another user
-    // get that user's follower count, decrement it by one
+    // get this user's list of following, check if the passed in user is in the list
+    // if so, then remove that user's id
+    // get this user's following count, decrement it by one
+    QuerySnapshot snapshot = await usersCollection.get();
+    for (QueryDocumentSnapshot doc in snapshot.docs) {
+      if(doc.get('userID') != userID)
+        continue;
+      else {
+        final followers = doc.get('followers');
+
+
+      }
+    }
+
+    /*
+    afterwards, repeat this process with the givenUserId instead of userID
+    to get the snapshot of the targeted user's collection
+
+
+     */
+
     // get that user's list of followers, remove this user's id
-    // get this user's follwing count, decrement it by one
-    // get this user's list of following, remove that user's id
+    // get that user's follower count, decrement it by one
+
   }
   Future follow(String givenUserId) async {
     // pass in user id of another user
@@ -32,6 +61,8 @@ class DatabaseService {
     // get that user's list of followers, add this user's id
     // get this user's follwing count, increment it by one
     // get this user's list of following, add that user's id
+
+
   }
 
   // getters and setters for various different variables
