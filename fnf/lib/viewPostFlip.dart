@@ -125,15 +125,37 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         height: 590,
 
                         decoration: BoxDecoration(
+
                           color: Colors.black,
+
                           boxShadow: [
                             BoxShadow(
-                              blurRadius: 50,
-                              spreadRadius: 5,
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black,
+                              blurRadius: 100,
+                              //offset: Offset(4, 8), // Shadow position
                             ),
                           ],
+                          /*
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 30,
+                              spreadRadius: 5,
+                              color: Colors.black.withOpacity(0.5),
+                              offset: Offset(4, 8),
+                            ),
+                          ],
+                          */
                         ),
+
+                        /*
+                        BoxShadow(
+        color: Colors.red,
+        blurRadius: 4,
+        offset: Offset(4, 8), // Shadow position
+      ),
+
+                        */
+
 
                         child: Column(
                           children: [
@@ -172,7 +194,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                '                                                 Show details',
+                                '                                       Show Less Details',
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
                                   color: Colors.white,

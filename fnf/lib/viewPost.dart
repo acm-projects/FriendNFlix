@@ -141,6 +141,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       child: Column(
                         children: [
                           SizedBox(height: 10),
+
+
                           Row(
                             children: [
                               SizedBox(width: 2),
@@ -165,6 +167,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               SizedBox(width: 10),
                             ],
                           ),
+
+
+
                           SizedBox(height: 2),
                           Image.asset(
                             'assets/images/AlpinistExample.jpg',
@@ -175,7 +180,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              '                                                        Show details',
+                              '                                                Show Post Details',
                               style: TextStyle(
                                 fontFamily: 'Montserrat',
                                 color: Colors.white,
