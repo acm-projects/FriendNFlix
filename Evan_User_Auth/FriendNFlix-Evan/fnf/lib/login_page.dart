@@ -115,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                     // if not, add them
                     print("logged in succesfully");
                   } catch(err){
+                    print(err);
                     print("error logging in");
                   }
                 }, // button does nothing for now
