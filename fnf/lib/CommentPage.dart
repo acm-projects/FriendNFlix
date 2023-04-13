@@ -110,7 +110,6 @@ class Comments extends StatelessWidget {
             minLines: 1,
             decoration: InputDecoration(
               suffixIcon: IconButton(
-                ichyon: Icon(Icons.send),
                 icon: Icon(Icons.send),
                 onPressed: (){},
               ),
