@@ -38,6 +38,13 @@ dependencies:
   firebase_auth: ^4.2.5   # firebase integration
   firebase_core: ^2.8.0   # more firebase integration
   cloud_firestore: ^4.4.4
+  googleapis: ^10.1.0
+  googleapis_auth: ^1.4.0
+  url_launcher: ^6.1.10
+  table_calendar: ^3.0.9
+
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
 
 dev_dependencies:
   flutter_test:

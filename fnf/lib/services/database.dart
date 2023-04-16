@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fnf/user_model.dart';
+import 'package:fnf/services/user_model.dart';
 
 class DatabaseService {
   final String userID;

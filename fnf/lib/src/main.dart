@@ -1,24 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fnf/login.dart';
-import 'package:fnf/register.dart';
+import 'login.dart';
+import 'viewPost.dart';
 import 'package:fnf/services/auth.dart';
-
-import 'package:fnf/login_page.dart';
-import 'home_page.dart';
-// import 'package:fnf/screenTest.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
 
   @override
   Widget build(BuildContext context) {
@@ -28,22 +21,20 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return const Login(); // uncomment once viewPost class is made, operates as feed page
           } else {
-            return Login(); // LoginPage();
+            return const viewPost(); // LoginPage();
           }
-
         },
         ),
       );
-    /*
-  @override
-  Widget build(BuildContext context) {
-    return StreamProvider<User?>.value(
-      value: AuthService().user,
-      child: MaterialApp(
-        home: Login(),
-      )
-    ) */
   }
 }
+
+/*
+- do database stuff for followers and profile page
+- then redo user auth for avanthi's new login/register pages
+- do input validation on the login/register pages, also do error message on failed login where the comment is
+- integrate the profile page
+- push to github
+ */
