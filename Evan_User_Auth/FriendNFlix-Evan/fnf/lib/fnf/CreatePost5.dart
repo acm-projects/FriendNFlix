@@ -12,12 +12,14 @@ class CreatePost5 extends StatefulWidget {
   final int starRating;
   final String postBody;
   final DateTime watchDay;
+  final String imageURL;
   CreatePost5(
       {Key? key,
       required this.filmTitle,
       required this.starRating,
       required this.postBody,
-      required this.watchDay})
+      required this.watchDay,
+      required this.imageURL})
       : super(key: key);
 
   @override
@@ -27,10 +29,20 @@ class CreatePost5 extends StatefulWidget {
 class _CreatePost5State extends State<CreatePost5> {
   double _sliderValue = 1;
   final _phoneLevelInputController = TextEditingController();
+  Widget imageWidget = Image.asset(
+    'assets/images/AlpinistExample.jpg',
+    width: 375,
+    height: 375,
+  );
 
   // the forward button is disabled until the user types in the body of the post
   var _forwardButtonOnPressed;
   Color _forwardButtonColor = Colors.grey;
+
+  void setUpImageWidget() {
+    imageWidget = Image.network(widget.imageURL, width: 320, height: 320);
+    setState(() {});
+  }
 
   void _enableForwardButton() {
     setState(() {
@@ -41,7 +53,7 @@ class _CreatePost5State extends State<CreatePost5> {
 
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CreatePost6(filmTitle: widget.filmTitle, starRating: widget.starRating, postBody: widget.postBody, watchDay: widget.watchDay, phoneLevel : _sliderValue.round())),
+          MaterialPageRoute(builder: (context) => CreatePost6(filmTitle: widget.filmTitle, starRating: widget.starRating, postBody: widget.postBody, watchDay: widget.watchDay, phoneLevel : _sliderValue.round(), imageURL: widget.imageURL)),
         );
       };
     });
@@ -106,6 +118,8 @@ class _CreatePost5State extends State<CreatePost5> {
         _sliderValue = textToInt.toDouble();
       });
     });
+
+    setUpImageWidget();
   }
 
   @override
@@ -119,101 +133,58 @@ class _CreatePost5State extends State<CreatePost5> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF7F5),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            // Expanded(
-            //   child: Center(
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(10),
-            //       child: ListView(
-            //         children: <Widget>[
+      body: Padding(
+        padding: EdgeInsets.only(
+          left: 10,
+          right: 10
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              // Expanded(
+              //   child: Center(
+              //     child: Padding(
+              //       padding: const EdgeInsets.all(10),
+              //       child: ListView(
+              //         children: <Widget>[
 
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.0000000015,
-            ),
-
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Text(
-                  'Create a Post',
-                  style: TextStyle(
-                    fontFamily: 'Karla',
-                    fontSize: 40,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFFAF3037),
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10,
-                        color: Colors.black.withOpacity(0.5),
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0000000015,
               ),
-            ),
 
-            Row(
-              children: [
-                Text(
-                  'SELECTED TITLE:',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Karla',
-                    shadows: [
-                      Shadow(
-                        blurRadius: 4,
-                        color: Colors.black,
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                SizedBox(width: 10),
-                Text(widget.filmTitle,
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Text(
+                    'Create a Post',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
                       fontFamily: 'Karla',
+                      fontSize: 40,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFFAF3037),
                       shadows: [
                         Shadow(
-                          blurRadius: 4,
-                          color: Colors.black,
+                          blurRadius: 10,
+                          color: Colors.black.withOpacity(0.5),
+                          offset: Offset(0, 3),
                         ),
                       ],
-                    ))
-              ],
-            ),
-
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Image.asset(
-                  'assets/images/AlpinistExample.jpg',
-                  width: 305,
-                  height: 305,
+                    ),
+                  ),
                 ),
               ),
-            ),
 
-            Padding(
-              padding: EdgeInsets.only(top: 15),
-              child: Column(
+              Row(
                 children: [
                   Text(
-                    'ADD PHONE LEVEL:',
+                    'SELECTED TITLE:',
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'Karla',
+                      fontSize: 018,
                       fontWeight: FontWeight.w700,
+                      fontFamily: 'Karla',
                       shadows: [
                         Shadow(
                           blurRadius: 4,
@@ -223,70 +194,122 @@ class _CreatePost5State extends State<CreatePost5> {
                     ),
                     textAlign: TextAlign.left,
                   ),
-                  Slider(
-                      value: _sliderValue,
-                      onChanged: (value) {
-                        setState(() {
-                          _sliderValue = value.roundToDouble();
-                          // change the value of the text input to the value of the slider (
-                          // but cut off the .0 at the end ie instead of 1.0 show 1)
-                          _phoneLevelInputController.text = _sliderValue.toString().
-                          substring(0, 
-                          _sliderValue.toString().indexOf("."));
-
-                          // enable the forward button
-                          _enableForwardButton();
-                        });
-                      },
-                      divisions:  99,
-                    min: 1,
-                    max: 100
-                      ),
-                  TextField(
-                    controller: _phoneLevelInputController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      labelText: "Phone Level",
-                      labelStyle: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                      filled: true,
-                      fillColor: Color.fromRGBO(
-                          255, 255, 255, 0.18), // 18% opacity white
-                    ),
+                  SizedBox(width: 10),
+                  Expanded(
+                      child: Text(widget.filmTitle,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontFamily: 'Karla',
+                            shadows: [
+                              Shadow(
+                                blurRadius: 4,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ))
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Color(0xFFAF3037),
-                      size: 30,
-                    )),
-                IconButton(
-                    onPressed: _forwardButtonOnPressed,
-                    icon: Icon(
-                      Icons.arrow_forward,
-                      color: _forwardButtonColor, // button starts disabled
-                      size: 30,
-                    ))
-              ],
-            )
-          ],
+
+              Center(
+                child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: imageWidget
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 15),
+                child: Column(
+                  children: [
+                    Text(
+                      'ADD PHONE LEVEL:',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontFamily: 'Karla',
+                        shadows: [
+                          Shadow(
+                            blurRadius: 4,
+                            color: Colors.black,
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 5,
+                        bottom: 5
+                      ),
+                          child: Slider(
+                              value: _sliderValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _sliderValue = value.roundToDouble();
+                                  // change the value of the text input to the value of the slider (
+                                  // but cut off the .0 at the end ie instead of 1.0 show 1)
+                                  _phoneLevelInputController.text = _sliderValue.toString().
+                                  substring(0,
+                                      _sliderValue.toString().indexOf("."));
+
+                                  // enable the forward button
+                                  _enableForwardButton();
+                                });
+                              },
+                              divisions:  99,
+                              min: 1,
+                              max: 100
+                          )
+                    ),
+                    TextField(
+                      controller: _phoneLevelInputController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        labelText: "Phone Level",
+                        labelStyle: const TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                        filled: true,
+                        fillColor: Color.fromRGBO(
+                            255, 255, 255, 0.18), // 18% opacity white
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Color(0xFFAF3037),
+                        size: 30,
+                      )),
+                  IconButton(
+                      onPressed: _forwardButtonOnPressed,
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        color: _forwardButtonColor, // button starts disabled
+                        size: 30,
+                      ))
+                ],
+              )
+            ],
+          ),
         ),
-      ),
+      )
     );
     // ),
     //     ],

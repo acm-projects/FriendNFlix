@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fnf/fnf/PostMethods.dart';
+import 'package:fnf/fnf/PostsOverview.dart';
 import 'package:fnf/fnf/posts_index.dart';
 
 import 'fnf/Calendar.dart';
+import 'fnf/Classes/Post.dart';
 import 'fnf/CreatePost1.dart';
 import 'fnf/test_firestore_page.dart';
 
@@ -11,7 +14,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final users = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
@@ -21,38 +23,40 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Text('${users?.email}', style: TextStyle(fontSize: 40),),
-
-            const SizedBox(height: 10,),
+            Text(
+              '${users?.email}',
+              style: TextStyle(fontSize: 40),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Center(
-              child: Container (
-
-              ),
+              child: Container(),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orangeAccent),
-              onPressed: (){
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orangeAccent),
+              onPressed: () {
                 FirebaseAuth.instance.signOut();
               },
-              child: Text(
-                  'Log Out'
-              ),
+              child: Text('Log Out'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               onPressed: () {
                 print("User wants to create a post!");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CreatePostPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const CreatePostPage()),
                 );
               }, // todo onPressed functionality
-              child: Text(
-                  'Create Post'
-              ),
+              child: Text('Create Post'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.tealAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.tealAccent),
               onPressed: () {
                 print("User wants to create a post!");
                 Navigator.push(
@@ -60,33 +64,45 @@ class HomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const CreatePost1()),
                 );
               }, // todo onPressed functionality
-              child: Text(
-                  'REAL Create a Post'
-              ),
+              child: Text('REAL Create a Post'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const PostIndexPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const PostIndexPage()),
                 );
               },
-              child: Text(
-                  'View All Posts'
-              ),
+              child: Text('View All Posts'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent),
-              onPressed: (){
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent),
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const CalendarPage()),
                 );
               },
-              child: Text(
-                  'Calendar'
-              ),
+              child: Text('Calendar'),
+            ),
+            ElevatedButton(
+              style:
+                  ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent),
+              onPressed: () async {
+                // get posts to pass to PostsOverviewPage to display
+                List postRefs = await PostMethods().getCurrentUsersPostRefs();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PostsOverviewPage(postRefs: postRefs)),
+                );
+              },
+              child: Text('Posts Overview for Logged In User'),
             ),
           ],
         ),

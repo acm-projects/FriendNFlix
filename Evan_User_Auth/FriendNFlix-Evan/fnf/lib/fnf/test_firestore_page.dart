@@ -113,7 +113,8 @@ class _CreatePostPageState extends State<CreatePostPage> {
                   Post newPost = Post(
                       body: postBody, filmTitle: "Some film", starRating: 3,
                       watchDay: 26, watchMonth: 2, watchYear: 2023, phoneLevel: 90,
-                  tags : []);
+                  tags : [], likedBy: [], dislikedBy: [],
+                  postAuthorId: users!.email!);
 
                   PostMethods postMethods = PostMethods();
                   var result = await postMethods.addPostToFirestore(newPost);
