@@ -1,12 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fnf/profile/otherProfile.dart';
 
-import '../createPost/createPost1.dart';
+import '../createPost/CreatePost1.dart';
 import '../profile/profile.dart';
 import '../src/viewPost.dart';
+import 'database.dart';
 
-class navBar extends StatelessWidget {
-  const navBar({Key? key}) : super(key: key);
+class navBar extends StatefulWidget {
+  navBar({Key? key}) : super(key: key);
+
+
+  @override
+  State<navBar> createState() => _navBarState();
+}
+  class _navBarState extends State<navBar> {
+    final user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +46,7 @@ class navBar extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const viewPost()),
+                                  builder: (context) => viewPost()),
                             );
                           },
                           icon: const Icon(
@@ -59,7 +76,7 @@ class navBar extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const Profile()),
+                                  builder: (context) => Profile(userID: user!.email!)),
                             );
                           },
                           icon: const Icon(

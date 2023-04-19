@@ -1,16 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fnf/services/navBar.dart';
+import 'package:fnf/services/database.dart';
+import 'package:fnf/services/auth.dart';
 
 import '../services/Calendar/Calendar.dart';
+import 'login.dart';
 
 
-void main() => runApp(const viewPost());
+class viewPost extends StatefulWidget {
+  viewPost({Key? key}) : super(key: key);
 
-class viewPost extends StatelessWidget {
-  const viewPost({Key? key}) : super(key: key);
+  @override
+  State<viewPost> createState() => _viewPost();
+}
 
+class _viewPost extends State<viewPost> {
   static const String _title = 'FriendNFlix';
+  final user = FirebaseAuth.instance.currentUser;
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +66,20 @@ class viewPost extends StatelessWidget {
           leading: SizedBox(
             width: 300, // increase the width of the logo
             height: 300, // increase the height of the logo
-            child: Image.asset(
+            child: IconButton(
+            icon: Image.asset(
               'assets/images/logo1.png',
               width: 300,
               height: 300,
-            ),
+            ), onPressed: () {
+              _auth.signOut();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Login()),
+              );
+            },
+            )
           ),
           centerTitle: true,
           title: const Text(
@@ -74,7 +92,7 @@ class viewPost extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: const navBar()
+        bottomNavigationBar: navBar()
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fnf/src/login.dart';
 import 'package:fnf/services/auth.dart';
+import 'package:fnf/src/viewPost.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _RegisterState extends State<Register> {
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confPassController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,8 @@ class _RegisterState extends State<Register> {
     fit: BoxFit.cover),
     ),
         child: Center(
+            //child: Form(
+            //key: _formKey,
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: ListView(
@@ -51,7 +55,7 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
                     //obscureText: true,
-                    controller: emailController,
+                    controller: usernameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -72,8 +76,8 @@ class _RegisterState extends State<Register> {
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
-                    obscureText: true,
-                    controller: passwordController,
+                    //obscureText: true,
+                    controller: emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -117,7 +121,7 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
                     obscureText: true,
-                    controller: passwordController,
+                    controller: confPassController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -148,20 +152,34 @@ class _RegisterState extends State<Register> {
                           primary: const Color(0xFF000000),
                         ),
                         onPressed: () async {
-                          //if(_formKey.currentState.validate()) {
-                          dynamic result =
-                              await _auth.registerWithEmailAndPassword(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim());
+                          //if (_formKey.currentState.validate()) {
+                            dynamic result = await _auth.registerWithEmailAndPassword(
+                                emailController.text.trim(),
+                                passwordController.text.trim(), usernameController.text.trim());
 
-                          //}
-                          /*dynamic result =
+                            if (result != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => viewPost()),
+                              );
+                            }
+                            else {
+                              // reload the page
+                              emailController.clear();
+                              usernameController.clear();
+                              passwordController.clear();
+                              confPassController.clear();
+                            }
+                            /*dynamic result =
                                   await _auth.registerWithEmailAndPassword(
                                       emailController.text.trim(),
                                       passwordController.text.trim());
                                    */
-                          //call setUsername to be the user's username
+                            //call setUsername to be the user's username
+                          //}
                         },
+
 
                         child: const Text(
                           'CREATE ACCOUNT',

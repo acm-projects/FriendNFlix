@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:fnf/profile/profile.dart';
 import 'package:fnf/services/navBar.dart';
 
-void main() => runApp(MaterialApp(
-  home: PostPage(),
-));
+class PostPage extends StatefulWidget {
+  PostPage({Key? key, required this.userID}) : super(key: key);
+  String userID;
 
-class PostPage extends StatelessWidget {
+  @override
+  State<PostPage> createState() => _postPage();
+}
+
+class _postPage extends State<PostPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +32,7 @@ class PostPage extends StatelessWidget {
                 color: Color(0xFFAF3037),
                 size: 30,
                 ), onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Profile()),
-                );
+                Navigator.pop(context);
               },
               ),
             ),

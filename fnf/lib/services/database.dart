@@ -1,25 +1,67 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fnf/services/user_model.dart';
+import 'package:googleapis/analytics/v3.dart';
 
 class DatabaseService {
   final String userID;
   DatabaseService({this.userID = ''});
   final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
 
-  Future setUserID(String newUserID) async => await usersCollection
-      .doc(userID).set({'id': newUserID});
+  Future setEmail(String email) async => await usersCollection
+      .doc(userID).set({'email': email}, SetOptions(merge: true)); // a separate email field is kept jic
   Future setUsername(String newUsername) async => await usersCollection
-      .doc(userID).set({'username': newUsername});
+      .doc(userID).set({'username': newUsername}, SetOptions(merge: true));
 
-  /* NET NINJA WAY, SAME AS ABOVE THO
-  Future updateUserData(String username) async {
-    return await usersCollection.doc(userID).set({
-    'username': username,
-  });
+  Future getUserWithID(String id) async => await usersCollection
+      .doc(id).get();
+  Future<String> getUsernameFromID(String id) async {
+    QuerySnapshot snapshot = await usersCollection.get();
+    for(QueryDocumentSnapshot doc in snapshot.docs)
+    {
+      if(doc.id == id)
+      {
+        return doc.get("username");
+      }
+    }
+    return "Stupid";
   }
- */
 
-  // honestly i think i need someone to hold my hand on these wtf is this data manip
+  Future<int> getNumFollowersFromID(String id) async {
+    QuerySnapshot snapshot = await usersCollection.get();
+    for(QueryDocumentSnapshot doc in snapshot.docs)
+    {
+      if(doc.id == id && doc.get("followers")!= null)
+      {
+        return doc.get("followers").length;
+      }
+    }
+    return 0;
+  }
+  Future<int> getNumFollowingFromID(String id) async {
+    QuerySnapshot snapshot = await usersCollection.get();
+    for(QueryDocumentSnapshot doc in snapshot.docs)
+    {
+      if(doc.id == id && doc.get("following")!= null)
+      {
+        return doc.get("following").length;
+      }
+    }
+    return 0;
+  }
+  Future<int> getPostCount(String userID) async {
+    QuerySnapshot snapshot = await usersCollection.doc(userID).collection("posts").get();
+    return snapshot.size;
+  }
+  Future<List<String>> getUsernamesFromIds(List<String> ids) async {
+    List<String> usernames = [];
+    print(ids);
+    for(String id in ids)
+      {
+        usernames.add(await getUsernameFromID(id));
+      }
+    return usernames;
+  }
+
   Future getFollowers(String givenUserID) async {
 
 
@@ -38,7 +80,7 @@ class DatabaseService {
       if(doc.get('userID') != userID)
         continue;
       else {
-        final followers = doc.get('followers');
+        final followers = doc.get('followers');  // this is wrong, change to be a list
 
 
       }

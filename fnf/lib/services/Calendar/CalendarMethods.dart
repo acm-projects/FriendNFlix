@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'Day.dart';
 import 'Month.dart';
 import 'package:fnf/services/Post/Post.dart';
-import 'package:fnf/services/Post/postMethods.dart';
+import 'package:fnf/services/Post/PostMethods.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 

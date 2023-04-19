@@ -1,21 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:fnf/profile/followingPage.dart';
+import 'package:fnf/profile/topWatchedPage.dart';
 
+import '../services/database.dart';
 import '../src/postPage.dart';
 import '../services/navBar.dart';
 import 'followerPage.dart';
 
-void main() => runApp(const MaterialApp(
-      home: Profile(),
-    ));
-
-class Profile extends StatelessWidget {
-  const Profile({super.key});
+class Profile extends StatefulWidget {
+  Profile({Key? key, required this.userID}) : super(key: key);
+  String userID;
 
   @override
+  State<Profile> createState() => _profilePage();
+}
+
+class _profilePage extends State<Profile> {
+  Widget profileWidget = Container();
+  dynamic user = null;
+  String? username;
+  int followers = 0;
+  int following = 0;
+  int postCount = 0;
+  setUserWithID(String userID) async {
+    user = await DatabaseService().getUserWithID(widget.userID);
+    setState(() => user = user);
+  }
+
+  getUsername(String userID) async {
+    username = await DatabaseService().getUsernameFromID(widget.userID);
+    setState(() => username = username);
+  }
+
+  getPostCount(String userID) async {
+    postCount = await DatabaseService().getPostCount(widget.userID);
+    setState(() => postCount = postCount);
+  }
+  getFollowers(String userID) async {
+    followers = await DatabaseService().getNumFollowersFromID(widget.userID);
+    setState(() => followers = followers);
+  }
+  getFollowing(String userID) async {
+    following = await DatabaseService().getNumFollowingFromID(widget.userID);
+    setState(() => following = following);
+  }
+
+  @override
+  void initState() {
+    getUsername(widget.userID);
+    setUserWithID(widget.userID);
+    getFollowers(widget.userID);
+    getFollowing(widget.userID);
+    getPostCount(widget.userID);
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: const navBar(),
+        bottomNavigationBar: navBar(),
         body: SingleChildScrollView(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -30,54 +72,42 @@ class Profile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       CircleAvatar(
-                          minRadius: 70,
-                          backgroundColor: Color(0xFFAF3037),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 68.0,
-                            child: ElevatedButton(
-                              child: const Icon(
-                                Icons.person,
-                                size: 100.0,
-                                color: Colors.black,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(),
-                                padding: EdgeInsets.all(20),
-                                backgroundColor: Colors.white,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const Profile()),
-                                );
-                              },
+                        minRadius: 70,
+                        backgroundColor: Color(0xFFAF3037),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 68.0,
+                          child: ElevatedButton(
+                            child: const Icon(
+                              Icons.person,
+                              size: 100.0,
+                              color: Colors.black,
                             ),
+                            style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(),
+                              padding: EdgeInsets.all(20),
+                              backgroundColor: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Profile(userID: widget.userID)),
+                              );
+                            },
                           ),
+                        ),
                       ),
                     ]),
 
                 Container(
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      'RandomUser',
+                      username ?? "",
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ),
-                //color: Colors.transparent,
-                //padding: EdgeInsets.all(50.0),
-                //child: Text('hi'),
-
-                Container(
-                  child: const Center(
-                    child: Text('@RandomUser11',
-                        style: TextStyle(
-                            color: Colors.black45,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700)),
                   ),
                 ),
 
@@ -95,11 +125,13 @@ class Profile extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Followers()),
+                        MaterialPageRoute(
+                            builder: (context) => Followers(userRef: user, userID: widget.userID)),
                       );
                     },
-                    child: const Text(
-                      '100k',
+                    child: Text(
+                      followers
+                          .toString(), // NEED TO FIX NULL CALL ON DATA PROBLEM
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -114,11 +146,13 @@ class Profile extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Following()),
+                        MaterialPageRoute(
+                            builder: (context) => Following(userRef: user, userID: widget.userID!)),
                       );
                     },
-                    child: const Text(
-                      '300',
+                    child: Text(
+                          following
+                          .toString(), // NEED TO FIX NULL CALL ON DATA PROBLEM
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -133,17 +167,18 @@ class Profile extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => PostPage()),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PostPage(userID: "please@gmail.com")),
                         );
                       },
-                      child:const Text(
-                    '40',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  )
-                  ),
+                      child: Text(
+                        postCount.toString(),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      )),
                   const Spacer()
                 ]),
                 //),
@@ -167,7 +202,7 @@ class Profile extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    'Reviews',
+                    'Posts',
                     style: TextStyle(
                         color: Colors.black45,
                         fontSize: 17,
@@ -188,10 +223,11 @@ class Profile extends StatelessWidget {
                         color: const Color(0xFFEAE2B7).withOpacity(0.4),
                         child: Container(
                           child: const Text(
-                            "Random bio stuff, tbvtoenovneotiysa",
+                            "   Please has served faithfully as our dummy account throughout the design"
+                            " and testing process, thank you Please",
                             style: TextStyle(
                                 color: Colors.black45,
-                                fontSize: 12,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
@@ -203,14 +239,22 @@ class Profile extends StatelessWidget {
                 Row(children: const [Text(' ')]),
 
                 Container(
-                  child: const Align(
+                  child: Align(
                     alignment: Alignment(-0.75, 0.0),
-                    child: Text(
-                      "Favorite Shows",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TopList(userRef: null)),
+                        );
+                      },
+                      child: Text(
+                        "Favorite Shows",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -241,6 +285,7 @@ class Profile extends StatelessWidget {
 
                 Row(children: const [Text(' ')]),
 
+                /*
                 Container(
                   child: const Align(
                     alignment: Alignment(-0.75, 0.0),
@@ -254,6 +299,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                 ),
+
 
                 Row(children: const [Text(' ')]),
 
@@ -270,6 +316,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                 ),
+                 */
 
                 Row(children: const [Text(' ')]),
 
@@ -314,6 +361,7 @@ class Profile extends StatelessWidget {
                     ),
                   ],
                 ),
+                Row(children: const [Text(' ')]),
               ]),
         ));
   }

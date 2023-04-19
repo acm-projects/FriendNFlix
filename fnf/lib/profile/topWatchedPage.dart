@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:fnf/services/navBar.dart';
+
+import '../services/database.dart';
 
 void main() => runApp(MaterialApp(
   theme: ThemeData.dark(),
-  home: TopList(),
+  home: TopList(userRef: null),
 ));
 
-class TopList extends StatelessWidget {
+class TopList extends StatefulWidget {
+
+  TopList({Key? key, required this.userRef}) : super(key: key);
+  dynamic userRef;
+  @override
+  State<TopList> createState() => _TopList();
+}
+
+class _TopList extends State<TopList> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'message',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'profile',
-          ),
-        ],
-      ),
+      bottomNavigationBar: navBar(),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -35,10 +32,14 @@ class TopList extends StatelessWidget {
             Container(
               child: Align(
                 alignment: Alignment(-0.87, -1.0),
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Color(0xFFAF3037),
-                  size: 35,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Color(0xFFAF3037),
+                    size: 30,
+                  ), onPressed: () {
+                  Navigator.pop(context);
+                },
                 ),
               ),
             ),
