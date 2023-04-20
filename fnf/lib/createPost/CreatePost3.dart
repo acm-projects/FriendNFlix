@@ -23,18 +23,15 @@ class CreatePost3 extends StatefulWidget {
 
 class _CreatePost3State extends State<CreatePost3> {
   final _postBodyInputController = TextEditingController();
-  Widget imageWidget = Image.asset(
-    'assets/images/AlpinistExample.jpg',
-    width: 375,
-    height: 375,
-  );
+  Widget imageWidget =
+  Image.asset('assets/images/AlpinistExample.jpg', fit: BoxFit.fitHeight);
 
   // the forward button is disabled until the user types in the body of the post
   var _forwardButtonOnPressed;
   Color _forwardButtonColor = Colors.grey;
 
   void setUpImageWidget() {
-    imageWidget = Image.network(widget.imageURL, width: 375, height: 375);
+    imageWidget = Image.network(widget.imageURL, fit: BoxFit.fitHeight);
     setState(() {});
   }
 
@@ -164,7 +161,8 @@ class _CreatePost3State extends State<CreatePost3> {
                 Center(
                   child: Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: imageWidget),
+                      child: Container(
+                          width: 375, height: 375, child: imageWidget)),
                 ),
 
                 Row(

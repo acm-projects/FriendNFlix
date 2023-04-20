@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/navBar.dart';
+
 void main() => runApp(MaterialApp(
   home: Index(),
 ));
@@ -15,22 +17,7 @@ class Index extends StatelessWidget {
         backgroundColor: Color(0xFFAF3037),
         child: Icon(Icons.add_sharp),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.message),
-            label: 'message',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'profile',
-          ),
-        ],
-      ),
+      bottomNavigationBar: navBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,

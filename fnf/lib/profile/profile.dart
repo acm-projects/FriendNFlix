@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fnf/profile/followingPage.dart';
 import 'package:fnf/profile/topWatchedPage.dart';
+import 'package:fnf/services/Post/PostMethods.dart';
 
+import 'PostOverview.dart';
 import '../services/database.dart';
 import '../src/postPage.dart';
 import '../services/navBar.dart';
@@ -164,12 +166,13 @@ class _profilePage extends State<Profile> {
                     padding: EdgeInsets.fromLTRB(0, 10, 55, 0),
                   ),
                   TextButton(
-                      onPressed: () {
+                      onPressed:() async {
+                        List postRefs = await PostMethods().getCurrentUsersPostRefs();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  PostPage(userID: "please@gmail.com")),
+                                  PostsOverviewPage(postRefs: postRefs)),
                         );
                       },
                       child: Text(

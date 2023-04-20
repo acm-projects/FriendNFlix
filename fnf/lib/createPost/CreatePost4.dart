@@ -28,8 +28,7 @@ class _CreatePost4State extends State<CreatePost4> {
   String _watchDayString = DateTime.now().toString().substring(0, 10);
   Widget imageWidget = Image.asset(
     'assets/images/AlpinistExample.jpg',
-    width: 375,
-    height: 375,
+    fit: BoxFit.fitHeight,
   );
 
   Color _forwardButtonColor = Color(0xFFAF3037);
@@ -77,7 +76,7 @@ class _CreatePost4State extends State<CreatePost4> {
   }
 
   void setUpImageWidget() {
-    imageWidget = Image.network(widget.imageURL, width: 375, height: 375);
+    imageWidget = Image.network(widget.imageURL, fit: BoxFit.fitHeight);
     setState(() {});
   }
 
@@ -177,7 +176,11 @@ class _CreatePost4State extends State<CreatePost4> {
                 Center(
                   child: Padding(
                       padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      child: imageWidget),
+                      child: Container(
+                          width: 375,
+                          height: 375,
+                          child: imageWidget
+                      )),
                 ),
 
                 Row(

@@ -32,9 +32,8 @@ class CreatePost6 extends StatefulWidget {
 class _CreatePost6State extends State<CreatePost6> {
   final _tagInputController = TextEditingController();
   Widget imageWidget = Image.asset(
-    'assets/images/AlpinistExample.jpg',
-    width: 300,
-    height: 300,
+      'assets/images/AlpinistExample.jpg',
+      fit: BoxFit.fitHeight
   );
 
   // the forward button is disabled until the user types in the body of the post
@@ -53,7 +52,7 @@ class _CreatePost6State extends State<CreatePost6> {
   String _tagsString = "";
 
   void setUpImageWidget() {
-    imageWidget = Image.network(widget.imageURL, width: 300, height: 300);
+    imageWidget = Image.network(widget.imageURL, fit: BoxFit.fitHeight);
     setState(() {});
   }
 
@@ -159,7 +158,11 @@ class _CreatePost6State extends State<CreatePost6> {
                 Center(
                   child: Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: imageWidget
+                      child: Container(
+                          width: 300,
+                          height: 300,
+                          child: imageWidget
+                      )
                   ),
                 ),
                 Padding(

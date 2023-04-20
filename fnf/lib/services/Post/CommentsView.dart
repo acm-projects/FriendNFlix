@@ -116,12 +116,18 @@ class _CommentsViewPageState extends State<CommentsViewPage> {
               Container(
                 child: Align(
                   alignment: Alignment(-0.90, -1.0),
-                  child: Icon(
+                  child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
                     Icons.arrow_back_ios,
                     color: Color(0xFFAF3037),
                     size: 30,
                   ),
                 ),
+                ),
+
               ),
               Container(
                 child: Center(

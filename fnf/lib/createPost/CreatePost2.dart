@@ -20,9 +20,8 @@ class _CreatePost2State extends State<CreatePost2> {
   var _forwardButtonOnPressed; // this will make the foward button
   Color _forwardButtonColor = Colors.grey;
   Widget imageWidget = Image.asset(
-    'assets/images/AlpinistExample.jpg',
-    width: 375,
-    height: 375,
+      'assets/images/AlpinistExample.jpg',
+      fit: BoxFit.fitHeight
   );
 
   // this will be an array of size 5 (one for each star) where index i coressponds
@@ -113,7 +112,7 @@ class _CreatePost2State extends State<CreatePost2> {
   }
 
   void setUpImageWidget() {
-    imageWidget = Image.network(widget.imageURL, width: 375, height: 375);
+    imageWidget = Image.network(widget.imageURL, fit: BoxFit.fitHeight);
     setState(() {});
   }
 
@@ -197,7 +196,11 @@ class _CreatePost2State extends State<CreatePost2> {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 20),
-                    child: imageWidget,
+                    child: Container(
+                        width: 375,
+                        height: 375,
+                        child: imageWidget
+                    ),
                   ),
                 ),
 
