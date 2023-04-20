@@ -37,12 +37,11 @@ class _CreatePost7State extends State<CreatePost7> {
   final users = FirebaseAuth.instance.currentUser;
   Widget imageWidget = Image.asset(
     'assets/images/AlpinistExample.jpg',
-    width: 225,
-    height: 225,
+    fit: BoxFit.fitHeight
   );
 
   void setUpImageWidget() {
-    imageWidget = Image.network(widget.imageURL, width: 225, height: 225);
+    imageWidget = Image.network(widget.imageURL, fit: BoxFit.fitHeight);
     setState(() {});
   }
 
@@ -156,7 +155,11 @@ class _CreatePost7State extends State<CreatePost7> {
                   Center(
                     child: Padding(
                         padding: const EdgeInsets.only(top: 20),
-                        child: imageWidget),
+                        child: Container(
+                          width: 225,
+                          height: 225,
+                          child: imageWidget
+                        )),
                   ),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -363,6 +366,7 @@ class _CreatePost7State extends State<CreatePost7> {
                                           dislikedBy: []);
 
                                       PostMethods postMethods = PostMethods();
+                                      print("here");
                                       var result = await postMethods
                                           .addPostToFirestore(newPost);
 

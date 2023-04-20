@@ -114,6 +114,44 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
     for (dynamic postRef in widget.postRefs) {
       final docSnap = await postRef.get();
       final post = docSnap.data(); // Convert to Post object
+      final moviesQuery = await _db.collection("movies").where("title", isEqualTo: post.filmTitle).get();
+      String? imageURL = "";
+
+      if(moviesQuery != null && moviesQuery.docs != null && moviesQuery.docs.length > 0){
+        print('reached here for post about ${post.filmTitle}');
+
+        final movieRef = moviesQuery.docs[0];
+        imageURL = movieRef.data()["posterLink"];
+        if(imageURL == null) {
+          print("could not find a url");
+          imageURL = "";
+        }
+      }
+
+      Widget imageWidget;
+      if(imageURL == ""){
+        imageWidget = Container(
+          height: 160,
+          width: 140,
+          decoration: BoxDecoration(
+            color: Color(0xFFEAE2B7),
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 4,
+                offset: Offset(2, 6),
+              ),
+            ],
+          ),
+        );
+      } else {
+        imageWidget = Container(
+          height: 160,
+          width: 140,
+          child: Image.network(imageURL, fit: BoxFit.fitHeight)
+        );
+      }
 
       // set the correct amount of stars to yellow based on user rating
 
@@ -138,21 +176,7 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(40, 10, 12, 10),
               ),
-              Container(
-                height: 160,
-                width: 140,
-                decoration: BoxDecoration(
-                  color: Color(0xFFEAE2B7),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 4,
-                      offset: Offset(2, 6),
-                    ),
-                  ],
-                ),
-              ),
+              imageWidget,
               Padding(
                 padding: EdgeInsets.all(16),
               ),
@@ -160,37 +184,39 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
                 // show title that post is about
                 Text(post.filmTitle.isEmpty ? "BLANK TITLE" : post.filmTitle,
                     style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 // row of stars
                 Row(children: [
                   Icon(
                     Icons.star,
                     color: starColors[0],
-                    size: 20,
+                    size: 25,
                   ),
                   Icon(
                     Icons.star,
                     color: starColors[1],
-                    size: 20,
+                    size: 25,
                   ),
                   Icon(
                     Icons.star,
                     color: starColors[2],
-                    size: 20,
+                    size: 25,
                   ),
                   Icon(
                     Icons.star,
                     color: starColors[3],
-                    size: 20,
+                    size: 25,
                   ),
                   Icon(
                     Icons.star,
                     color: starColors[4],
-                    size: 20,
+                    size: 25,
                   ),
                 ]),
                 // button to click on to go to post view
                 ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey),
                     onPressed: () {
                       print('clicked on button for ${post.filmTitle} post');
 
@@ -200,7 +226,10 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
                               builder: (context) =>
                                   PostsViewPage(postRefs: [postRef])));
                     },
-                    child: Text("View Details"))
+                    child: Text("View Details",
+                    style: TextStyle(
+                      fontSize: 18
+                    )))
               ]),
             ],
           ));

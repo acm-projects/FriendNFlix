@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
   Map<String, bool> favoritedPosts = {};
   bool _updatingLikes = false;
   List<Widget> postViewWidgets = [];
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 
   @override
@@ -128,6 +130,24 @@ class _PostsViewPageState extends State<PostsViewPage> {
         _postAuthorUsername = "Anonymous";
       }
 
+      String? imageURL = "";
+
+      final moviesQuery = await _db.collection("movies").where("title", isEqualTo: post.filmTitle).get();
+      if(moviesQuery != null && moviesQuery.docs != null && moviesQuery.docs.length > 0){
+        print('reached here for post about ${post.filmTitle}');
+
+        final movieRef = moviesQuery.docs[0];
+        imageURL = movieRef.data()["posterLink"];
+        if(imageURL == null) {
+          print("could not find a url");
+          imageURL = "";
+        }
+      }
+
+      Widget imageWidget = Image.asset("assets/images/AlpinistExample.jpg", fit: BoxFit.fitHeight);
+      if(imageURL != null && imageURL.isNotEmpty)
+        imageWidget = Image.network(imageURL, fit: BoxFit.fitHeight);
+
       Widget postViewWidget;
       if (postsShowingFront![postId]!) {
         postViewWidget = Container(
@@ -141,217 +161,229 @@ class _PostsViewPageState extends State<PostsViewPage> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              Row(
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+            ),
+              child: Column(
                 children: [
-                  SizedBox(width: 2),
-                  Image.asset(
-                    'assets/images/sampleProfile.png',
-                    width: 90,
-                    height: 90,
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      "@" + _postAuthorUsername + " posted",
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontSize: 21,
-                        //fontStyle: FontStyle.italic,
-                        //fontWeight: FontWeight.w500,
+                  SizedBox(height: 10),
+                  Row(
+                    children: [
+                      SizedBox(width: 2),
+                      Image.asset("assets/images/sampleProfile.png",
+                          width: 75,
+                          height: 75
                       ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                ],
-              ),
-              SizedBox(height: 2),
-              Image.asset(
-                'assets/images/AlpinistExample.jpg',
-                width: 300,
-                height: 300,
-              ),
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      postsShowingFront[postId] = false;
-                      _buildPostViewWidgets();
-                    },
-                    child: Text(
-                      'Show details',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  )),
-              SizedBox(height: 1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.star,
-                    color: starColors[0],
-                    size: 50,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[1],
-                    size: 50,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[2],
-                    size: 50,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[3],
-                    size: 50,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[4],
-                    size: 50,
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                    onPressed: () async {
-
-                      // if the likes are being updated (because the user might've)
-                      // clicked the button multiple times, wait for the previous
-                      // click to finish its job
-                      if(_updatingLikes) return;
-                      else _updatingLikes = true;
-
-                      // if the like button is clicked, unselect the dislike
-                      // button (you cannot have a like and dislike at the same
-                      // time)
-
-                      // set dislike to false
-                      dislikedPosts[postId] = false;
-                      await PostMethods().removeDislike(postId);
-
-                      // if the like button was pressed when it was on, toggle
-                      // it off
-                      if(likedPosts[postId]!){
-                        print("LIKED POST ALREADY, TURNING OFF LIKE");
-                        likedPosts[postId] = false;
-                        await PostMethods().removeLike(postId);
-                      } else {
-                        print("not yet liked post, turning ON like");
-                        // the user had not liked the post then clicked the
-                        // button so toggle like ON
-                        likedPosts[postId] = true;
-                        await PostMethods().addLike(postId);
-                      }
-                      _updatingLikes = false;
-                      _buildPostViewWidgets();
-                    },
-                    icon: Icon(
-                      Icons.thumb_up,
-                      color: likedPosts[postId] == true ? Colors.green : Colors.white,
-                      size: 35,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      print("clicked heart button");
-                    },
-                    icon: Icon(
-                      Icons.favorite,
-                      color: /* _userHasFavorited ? Colors.pink :*/ Colors.white,
-                      size: 35,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-
-                      // if the likes are being updated (because the user might've)
-                      // clicked the button multiple times, wait for the previous
-                      // click to finish its job
-                      if(_updatingLikes) return;
-                      else _updatingLikes = true;
-
-                      // if the dislike button is clicked, unselect the like
-                      // button (you cannot have a like and dislike at the same
-                      // time)
-
-                      // set like to false
-                      likedPosts[postId] = false;
-                      await PostMethods().removeLike(postId);
-
-                      // if the dislike button was pressed when it was on, toggle
-                      // it off
-                      if(dislikedPosts[postId]!){
-                        print("DISLIKED POST ALREADY, TURNING OFF DISLIKE");
-                        dislikedPosts[postId] = false;
-                        await PostMethods().removeDislike(postId);
-                      } else {
-                        print("not yet disliked post, turning ON dislike");
-                        // the user had not disliked the post then clicked the
-                        // button so toggle dislike ON
-                        dislikedPosts[postId] = true;
-                        await PostMethods().addDislike(postId);
-                      }
-
-                      await post.toFirestore();
-
-                      _updatingLikes = false;
-                      _buildPostViewWidgets();
-                    },
-                    icon: Icon(
-                      Icons.thumb_down,
-                      color: dislikedPosts[postId] == true ? Colors.red : Colors.white,
-                      size: 35,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height:
-                60, // Adjust this value to move the widget down more or less
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child:
-                      ElevatedButton(
-                        onPressed: (){
-                          print("clicked on me!!!!");
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => CommentsViewPage(postRef: postRef))
-                          );
-                        },
+                      SizedBox(width: 5),
+                      Expanded(
                         child: Text(
-                          'View Comment Section ',
+                          "@" + _postAuthorUsername + " posted",
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 21,
+                            //fontStyle: FontStyle.italic,
+                            //fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
+                      SizedBox(width: 10),
+                    ],
+                  ),
+                  SizedBox(height: 2),
+                  Container(
+                      width: 250,
+                      height: 250,
+                      child: imageWidget
+                  ),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black
+                        ),
+                        onPressed: () {
+                          postsShowingFront[postId] = false;
+                          _buildPostViewWidgets();
+                        },
+                        child: Text(
+                          'Show details',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      )),
+                  SizedBox(height: 1),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: starColors[0],
+                        size: 50,
+                      ),
+                      Icon(
+                        Icons.star,
+                        color: starColors[1],
+                        size: 50,
+                      ),
+                      Icon(
+                        Icons.star,
+                        color: starColors[2],
+                        size: 50,
+                      ),
+                      Icon(
+                        Icons.star,
+                        color: starColors[3],
+                        size: 50,
+                      ),
+                      Icon(
+                        Icons.star,
+                        color: starColors[4],
+                        size: 50,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+
+                          // if the likes are being updated (because the user might've)
+                          // clicked the button multiple times, wait for the previous
+                          // click to finish its job
+                          if(_updatingLikes) return;
+                          else _updatingLikes = true;
+
+                          // if the like button is clicked, unselect the dislike
+                          // button (you cannot have a like and dislike at the same
+                          // time)
+
+                          // set dislike to false
+                          dislikedPosts[postId] = false;
+                          await PostMethods().removeDislike(postId);
+
+                          // if the like button was pressed when it was on, toggle
+                          // it off
+                          if(likedPosts[postId]!){
+                            print("LIKED POST ALREADY, TURNING OFF LIKE");
+                            likedPosts[postId] = false;
+                            await PostMethods().removeLike(postId);
+                          } else {
+                            print("not yet liked post, turning ON like");
+                            // the user had not liked the post then clicked the
+                            // button so toggle like ON
+                            likedPosts[postId] = true;
+                            await PostMethods().addLike(postId);
+                          }
+                          _updatingLikes = false;
+                          _buildPostViewWidgets();
+                        },
+                        icon: Icon(
+                          Icons.thumb_up,
+                          color: likedPosts[postId] == true ? Colors.green : Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          print("clicked heart button");
+                        },
+                        icon: Icon(
+                          Icons.favorite,
+                          color: /* _userHasFavorited ? Colors.pink :*/ Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () async {
+
+                          // if the likes are being updated (because the user might've)
+                          // clicked the button multiple times, wait for the previous
+                          // click to finish its job
+                          if(_updatingLikes) return;
+                          else _updatingLikes = true;
+
+                          // if the dislike button is clicked, unselect the like
+                          // button (you cannot have a like and dislike at the same
+                          // time)
+
+                          // set like to false
+                          likedPosts[postId] = false;
+                          await PostMethods().removeLike(postId);
+
+                          // if the dislike button was pressed when it was on, toggle
+                          // it off
+                          if(dislikedPosts[postId]!){
+                            print("DISLIKED POST ALREADY, TURNING OFF DISLIKE");
+                            dislikedPosts[postId] = false;
+                            await PostMethods().removeDislike(postId);
+                          } else {
+                            print("not yet disliked post, turning ON dislike");
+                            // the user had not disliked the post then clicked the
+                            // button so toggle dislike ON
+                            dislikedPosts[postId] = true;
+                            await PostMethods().addDislike(postId);
+                          }
+
+                          await post.toFirestore();
+
+                          _updatingLikes = false;
+                          _buildPostViewWidgets();
+                        },
+                        icon: Icon(
+                          Icons.thumb_down,
+                          color: dislikedPosts[postId] == true ? Colors.red : Colors.white,
+                          size: 35,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height:
+                    60, // Adjust this value to move the widget down more or less
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child:
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black
+                            ),
+                            onPressed: (){
+                              print("clicked on me!!!!");
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => CommentsViewPage(postRef: postRef))
+                              );
+                            },
+                            child: Text(
+                              'View Comment Section ',
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  )
+                ],
               )
-            ],
-          ),
+          )
+
         ); // Post Front View Widget;
       } else {
         postViewWidget = Container(
@@ -365,169 +397,176 @@ class _PostsViewPageState extends State<PostsViewPage> {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  SizedBox(width: 2),
-                  Image.asset(
-                    'assets/images/sampleProfile.png',
-                    width: 90,
-                    height: 90,
-                  ),
-                  SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      '@alexa_r posted',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontSize: 21,
-                        //fontStyle: FontStyle.italic,
-                        //fontWeight: FontWeight.w500,
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/sampleProfile.png',
+                      width: 75,
+                      height: 75,
+                    ),
+                    SizedBox(width: 5),
+                    Expanded(
+                      child: Text(
+                        '@alexa_r posted',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontSize: 21,
+                          //fontStyle: FontStyle.italic,
+                          //fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 10),
-                ],
-              ),
-              SizedBox(height: 2),
-              Image.asset(
-                'assets/images/AlpinistExample.jpg',
-                width: 200,
-                height: 200,
-              ),
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: ElevatedButton(
-                    onPressed: () {
+                    SizedBox(width: 10),
+                  ],
+                ),
+                SizedBox(height: 2),
+                Container(
+                  width: 275,
+                  height: 275,
+                  child: imageWidget
+                ),
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black
+                      ),
+                      onPressed: () {
                         print("show less details PLEASE!");
                         postsShowingFront[postId] = true;
                         _buildPostViewWidgets();
-                    },
-                    child: Text(
-                      'Show less details',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontStyle: FontStyle.italic,
+                      },
+                      child: Text(
+                        'Show less details',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
-                    ),
-                  )),
-              SizedBox(height: 1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.star,
-                    color: starColors[0],
-                    size: 40,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[1],
-                    size: 40,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[2],
-                    size: 40,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[3],
-                    size: 40,
-                  ),
-                  Icon(
-                    Icons.star,
-                    color: starColors[4],
-                    size: 40,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height:
-                150, // move up and down (the review info that's being displayed)
-                child: Column(
+                    )),
+                SizedBox(height: 1),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Title: ${post.filmTitle}',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.star,
+                      color: starColors[0],
+                      size: 40,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Thoughts ${post.body}',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.star,
+                      color: starColors[1],
+                      size: 40,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Phone Level: ${post.phoneLevel}',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.star,
+                      color: starColors[2],
+                      size: 40,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Watch Date:  ${post.watchMonth} / ${post.watchDay} / ${post.watchYear}',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.star,
+                      color: starColors[3],
+                      size: 40,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Tags: TODO',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.star,
+                      color: starColors[4],
+                      size: 40,
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
+                SizedBox(
+                  height:
+                  150, // move up and down (the review info that's being displayed)
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Title: ${post.filmTitle}',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Thoughts ${post.body}',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Phone Level: ${post.phoneLevel}',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Watch Date:  ${post.watchMonth} / ${post.watchDay} / ${post.watchYear}',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Tags: TODO',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          )
         );
       }
       postViewWidgets.add(postViewWidget);

@@ -177,6 +177,24 @@ class PostMethods {
     CalendarMethods calendarMethods = CalendarMethods();
     calendarMethods.addPostToCalendar(
         postDoc.id, post!.watchMonth, post.watchDay, post.watchYear);
+
+    var moviesQuery = await db.collection("movies").where("title", isEqualTo:  post.filmTitle).get();
+
+    print(moviesQuery);
+
+    for (var movieSnapshot in moviesQuery.docs) {
+      String movieId = movieSnapshot.id;
+
+      final ref = await db.collection("movies").doc(movieId);
+
+      await ref.update({
+        "postIds" : FieldValue.arrayUnion([postRef.id])
+      });
+
+      print("finito");
+    }
+
+
   }
 
   addCommentToFirestore(dynamic postRef, Map<String, dynamic> comment) async {

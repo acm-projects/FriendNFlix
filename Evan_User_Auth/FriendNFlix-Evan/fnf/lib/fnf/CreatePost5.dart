@@ -31,8 +31,7 @@ class _CreatePost5State extends State<CreatePost5> {
   final _phoneLevelInputController = TextEditingController();
   Widget imageWidget = Image.asset(
     'assets/images/AlpinistExample.jpg',
-    width: 375,
-    height: 375,
+    fit: BoxFit.fitHeight
   );
 
   // the forward button is disabled until the user types in the body of the post
@@ -40,7 +39,7 @@ class _CreatePost5State extends State<CreatePost5> {
   Color _forwardButtonColor = Colors.grey;
 
   void setUpImageWidget() {
-    imageWidget = Image.network(widget.imageURL, width: 320, height: 320);
+    imageWidget = Image.network(widget.imageURL, fit: BoxFit.fitHeight);
     setState(() {});
   }
 
@@ -216,7 +215,11 @@ class _CreatePost5State extends State<CreatePost5> {
               Center(
                 child: Padding(
                     padding: const EdgeInsets.only(top: 20),
-                    child: imageWidget
+                    child: Container(
+                      width: 320,
+                      height: 320,
+                      child: imageWidget
+                    )
                 ),
               ),
 
