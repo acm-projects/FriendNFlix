@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fnf/profile/Feed.dart';
 import 'package:fnf/profile/otherProfile.dart';
 
 import '../createPost/CreatePost1.dart';
@@ -46,7 +47,7 @@ class navBar extends StatefulWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => viewPost()),
+                                  builder: (context) => FeedPage()),
                             );
                           },
                           icon: const Icon(

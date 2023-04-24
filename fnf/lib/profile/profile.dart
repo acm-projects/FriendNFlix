@@ -57,16 +57,33 @@ class _profilePage extends State<Profile> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFAF3037),
+          elevation: 0, // set the height of the AppBar
+          automaticallyImplyLeading: false,
+          toolbarHeight: 80,
+          actions: [
+            ColorFiltered( // MESSAGE BUTTON AND ICON
+              colorFilter: const ColorFilter.mode(
+                Colors.white,
+                BlendMode.srcIn,
+              ),
+              child: IconButton(
+                onPressed: () {
+
+                },
+                icon: const Icon(Icons.settings),
+                iconSize: 50, // increase the size of the icon
+              ),
+            ),
+          ],
+        ),
         bottomNavigationBar: navBar(),
         body: SingleChildScrollView(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Container(
-                  height: 70,
-                  color: const Color(0xFFAF3037),
-                ),
                 const SizedBox(height: 30),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -166,6 +183,7 @@ class _profilePage extends State<Profile> {
                   TextButton(
                       onPressed:() async {
                         List postRefs = await PostMethods().getCurrentUsersPostRefs();
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(

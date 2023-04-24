@@ -76,8 +76,8 @@ class _otherProfileState extends State<otherProfile> {
         floatingActionButton: FloatingActionButton.large(
           elevation: 0,
           backgroundColor: Color(0xFFAF3037),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15.0))),
+          //shape: RoundedRectangleBorder(
+              //borderRadius: BorderRadius.all(Radius.circular(15.0))),
           child: const Text(
             "Follow",
             style: TextStyle(
