@@ -23,22 +23,40 @@ class _PostsViewPageState extends State<PostsViewPage> {
   Map<String, bool> postsShowingFront = {};
   Map<String, bool> likedPosts = {};
   Map<String, bool> dislikedPosts = {};
-  Map<String, bool> favoritedPosts = {};
+  Map<String, bool> hasFavoritedFilmMap = {};
   bool _updatingLikes = false;
   List<Widget> postViewWidgets = [];
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
 
+  setUp() async {
+    await _setInitialMapValues();
+    await _buildPostViewWidgets();
+  }
+
   @override
   void initState() {
-    _setInitialMapValues();
-    _buildPostViewWidgets();
+    setUp();
 
 
     super.initState();
   }
 
   _setInitialMapValues() async {
+
+    List<String> differentFilms = [];
+    var userRef = _db.collection("users").doc(users!.email);
+    var userSnap = await userRef.get();
+    var userData = userSnap.data();
+    List<dynamic> favoritedFilmsDynamic = userData!["favoritedFilms"];
+    List<String> favoritedFilms = [];
+
+    for(dynamic item in favoritedFilmsDynamic){
+      favoritedFilms.add(item.toString());
+    }
+    print('favoritedFilms = ${favoritedFilms}');
+
+
     for (dynamic postRef in widget.postRefs) {
       // all posts should start facing forward
       String postId = await postRef.id;
@@ -52,12 +70,23 @@ class _PostsViewPageState extends State<PostsViewPage> {
       final docSnap = await postRef.get();
       final post = docSnap.data(); // Convert to Post object
 
+      String title = post.filmTitle;
+      if(differentFilms.contains(title) == false){
+        differentFilms.add(title);
+        print('added film ${title}');
+      }
+
+
       bool hasLikedPost = false;
       for (String user in post.likedBy!) {
         if (user == users!.email) {
+          print('${user} has liked this post');
           likedPosts[postId] = true;
           hasLikedPost = true;
           break;
+        }
+        else {
+          print('${user} does not match ${users!.email}');
         }
       }
 
@@ -81,12 +110,20 @@ class _PostsViewPageState extends State<PostsViewPage> {
         dislikedPosts[postId] = false;
       }
 
-      // todo CHECK if user has favorited film
-      // for(String likedUser in post.likedBy!){
-      //   if(likedUser == users!.email){
-      //     likedPosts[post] = true;
-      //   }
-      // }
+    }
+
+    for(String film in differentFilms){
+      bool hasFavoritedFilm = false;
+
+      for(String favoritedFilm in favoritedFilms){
+        if(film == favoritedFilm){
+          hasFavoritedFilm = true;
+        }
+      }
+
+      print('hasFavorited ${film} = ${hasFavoritedFilm}');
+    hasFavoritedFilmMap[film] = hasFavoritedFilm;
+
     }
   }
 
@@ -99,6 +136,12 @@ class _PostsViewPageState extends State<PostsViewPage> {
       final post = docSnap.data(); // Convert to Post object
       String postId = postRef.id;
 
+      Color heartColor;
+      if(hasFavoritedFilmMap[post.filmTitle] == true){
+        heartColor = Colors.red;
+      } else {
+        heartColor = Colors.white;
+      }
 
 
 
@@ -293,12 +336,39 @@ class _PostsViewPageState extends State<PostsViewPage> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {
+                        onPressed: () async {
                           print("clicked heart button");
+
+                          bool currentlyFavoritedFilm = false;
+                          if(hasFavoritedFilmMap[post.filmTitle] ==  true){
+                            currentlyFavoritedFilm = true;
+                          }
+
+                          // toggle heart to the opposite of what it is now
+                          hasFavoritedFilmMap[post.filmTitle] = !currentlyFavoritedFilm;
+
+                          // todo toggle heart in db
+
+                          var userRef = await _db.collection("users").doc(users!.email);
+
+
+                          if(currentlyFavoritedFilm){
+                            await userRef.update({
+                              "favoritedFilms" : FieldValue.arrayRemove([post.filmTitle])
+                            });
+                          }
+                          else {
+                            await userRef.update({
+                              "favoritedFilms" : FieldValue.arrayUnion([post.filmTitle])
+                            });
+                          }
+
+
+                          _buildPostViewWidgets();
                         },
                         icon: Icon(
                           Icons.favorite,
-                          color: /* _userHasFavorited ? Colors.pink :*/ Colors.white,
+                          color: heartColor,
                           size: 35,
                         ),
                       ),
@@ -587,10 +657,15 @@ class _PostsViewPageState extends State<PostsViewPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(""),
-          leading: Icon(
-            Icons.arrow_back_ios,
-            color: Color(0xFFAF3037),
-            size: 30,
+          leading: IconButton(
+            onPressed: (){
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Color(0xFFAF3037),
+              size: 30,
+            )
           ),
           // title: Text("Posts",
           //     style: TextStyle(

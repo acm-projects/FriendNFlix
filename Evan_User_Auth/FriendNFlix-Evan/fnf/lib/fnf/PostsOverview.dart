@@ -15,7 +15,6 @@ import 'PostsView.dart';
 class PostsOverviewPage extends StatefulWidget {
   PostsOverviewPage({Key? key, required this.postRefs}) : super(key: key);
   List<dynamic> postRefs;
-
   @override
   State<PostsOverviewPage> createState() => _PostsOverviewPageState();
 }
@@ -27,78 +26,78 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
 
   List<Widget> postOverviewWidgets = [];
 
-  void _loadCSV() async {
-    List<String> posterLinks = [];
-    List<String> movieTitles = [];
-    List<String> yearsReleased = [];
-    List<String> certificates = [];
-    List<String> runTimes = [];
-    List<String> genres = [];
-    List<String> imdbRatings = [];
-    List<String> overviews = [];
-    List<String> metaScores = [];
-    List<String> directors = [];
-    List<String> mainStars = [];
-    List<String> secondaryStars = [];
-    List<String> thirdStars = [];
-    List<String> fourthStars = [];
-    List<int> voteCounts = [];
-    List<String> grossRevenues = [];
-
-    List<String> allItems = [];
-    List<Map<String, dynamic>> movies = [];
-    String rawData = await rootBundle.loadString("files/imdb_top_1000.csv");
-    _data = CsvToListConverter().convert(rawData);
-    bool isFirstLine = true;
-    for(List<dynamic> line in _data){
-
-      if(isFirstLine){
-        isFirstLine = false;
-        continue;
-      }
-
-      // posterLinks.add(line.removeAt(0).toString());
-      //
-      // movieTitles.add(line.removeAt(0).toString());
-      //
-      // yearsReleased.add(line.removeAt(0).toString());
-      //
-      // certificates.add(line.removeAt(0).toString());
-      // runTimes.add(line.removeAt(0).toString());
-      // genres.add(line.removeAt(0).toString());
-      //
-      // imdbRatings.add(line.removeAt(0).toString());
-      // overviews.add(line.removeAt(0).toString());
-      // metaScores.add(line.removeAt(0).toString());
-      // directors.add(line.removeAt(0).toString());
-      // mainStars.add(line.removeAt(0).toString());
-      // secondaryStars.add(line.removeAt(0).toString());
-      // thirdStars.add(line.removeAt(0).toString());
-      // fourthStars.add(line.removeAt(0).toString());
-      // voteCounts.add(line.removeAt(0));
-      // grossRevenues.add(line.removeAt(0).toString());
-      //
-      final movieData = <String, dynamic>{
-        "posterLink" : line.removeAt(0).toString(),
-        "title" : line.removeAt(0).toString(),
-        "yearReleased" : line.removeAt(0).toString(),
-        "certificate" : line.removeAt(0).toString(),
-        "runTime" : line.removeAt(0).toString(),
-        "genres" : line.removeAt(0).toString(),
-        "imdbRating" : line.removeAt(0).toString(),
-        "overview" : line.removeAt(0).toString(),
-        "metaScore" : line.remove(0).toString(),
-        "director" : line.removeAt(0).toString(),
-        "stars" : [ line.removeAt(0).toString(), line.removeAt(0).toString(), line.removeAt(0).toString(), line.removeAt(0).toString()],
-        "voteCount" : line.removeAt(0),
-        "grossRevenue": line.removeAt(0).toString()
-      };
-      await _db.collection("movies").add(movieData);
-      movies.add(movieData);
-    }
-    print(movies.length);
-    print("finito");
-  }
+  // void _loadCSV() async {
+  //   List<String> posterLinks = [];
+  //   List<String> movieTitles = [];
+  //   List<String> yearsReleased = [];
+  //   List<String> certificates = [];
+  //   List<String> runTimes = [];
+  //   List<String> genres = [];
+  //   List<String> imdbRatings = [];
+  //   List<String> overviews = [];
+  //   List<String> metaScores = [];
+  //   List<String> directors = [];
+  //   List<String> mainStars = [];
+  //   List<String> secondaryStars = [];
+  //   List<String> thirdStars = [];
+  //   List<String> fourthStars = [];
+  //   List<int> voteCounts = [];
+  //   List<String> grossRevenues = [];
+  //
+  //   List<String> allItems = [];
+  //   List<Map<String, dynamic>> movies = [];
+  //   String rawData = await rootBundle.loadString("files/imdb_top_1000.csv");
+  //   _data = CsvToListConverter().convert(rawData);
+  //   bool isFirstLine = true;
+  //   for(List<dynamic> line in _data){
+  //
+  //     if(isFirstLine){
+  //       isFirstLine = false;
+  //       continue;
+  //     }
+  //
+  //     // posterLinks.add(line.removeAt(0).toString());
+  //     //
+  //     // movieTitles.add(line.removeAt(0).toString());
+  //     //
+  //     // yearsReleased.add(line.removeAt(0).toString());
+  //     //
+  //     // certificates.add(line.removeAt(0).toString());
+  //     // runTimes.add(line.removeAt(0).toString());
+  //     // genres.add(line.removeAt(0).toString());
+  //     //
+  //     // imdbRatings.add(line.removeAt(0).toString());
+  //     // overviews.add(line.removeAt(0).toString());
+  //     // metaScores.add(line.removeAt(0).toString());
+  //     // directors.add(line.removeAt(0).toString());
+  //     // mainStars.add(line.removeAt(0).toString());
+  //     // secondaryStars.add(line.removeAt(0).toString());
+  //     // thirdStars.add(line.removeAt(0).toString());
+  //     // fourthStars.add(line.removeAt(0).toString());
+  //     // voteCounts.add(line.removeAt(0));
+  //     // grossRevenues.add(line.removeAt(0).toString());
+  //     //
+  //     final movieData = <String, dynamic>{
+  //       "posterLink" : line.removeAt(0).toString(),
+  //       "title" : line.removeAt(0).toString(),
+  //       "yearReleased" : line.removeAt(0).toString(),
+  //       "certificate" : line.removeAt(0).toString(),
+  //       "runTime" : line.removeAt(0).toString(),
+  //       "genres" : line.removeAt(0).toString(),
+  //       "imdbRating" : line.removeAt(0).toString(),
+  //       "overview" : line.removeAt(0).toString(),
+  //       "metaScore" : line.remove(0).toString(),
+  //       "director" : line.removeAt(0).toString(),
+  //       "stars" : [ line.removeAt(0).toString(), line.removeAt(0).toString(), line.removeAt(0).toString(), line.removeAt(0).toString()],
+  //       "voteCount" : line.removeAt(0),
+  //       "grossRevenue": line.removeAt(0).toString()
+  //     };
+  //     await _db.collection("movies").add(movieData);
+  //     movies.add(movieData);
+  //   }
+  //   print(movies.length);
+  //   print("finito");
+  // }
 
   buildPostOverviewWidgets() async {
 
@@ -253,11 +252,16 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(""),
-          leading: Icon(
-            Icons.arrow_back_ios,
-            color: Color(0xFFAF3037),
-            size: 30,
-          ),
+          leading: IconButton(
+            onPressed: (){
+    Navigator.pop(context);
+    },
+        icon: Icon(
+          Icons.arrow_back_ios,
+          color: Color(0xFFAF3037),
+          size: 30,
+        )
+    ),
           // title: Text("Posts",
           //     style: TextStyle(
           //         color: Color(0xFFAF3037),
