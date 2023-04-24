@@ -5,7 +5,6 @@ import 'package:fnf/services/Post/PostMethods.dart';
 
 import 'PostOverview.dart';
 import '../services/database.dart';
-import '../src/postPage.dart';
 import '../services/navBar.dart';
 import 'followerPage.dart';
 
@@ -18,7 +17,6 @@ class Profile extends StatefulWidget {
 }
 
 class _profilePage extends State<Profile> {
-  Widget profileWidget = Container();
   dynamic user = null;
   String? username;
   int followers = 0;
@@ -133,7 +131,7 @@ class _profilePage extends State<Profile> {
                     },
                     child: Text(
                       followers
-                          .toString(), // NEED TO FIX NULL CALL ON DATA PROBLEM
+                          .toString(),
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,

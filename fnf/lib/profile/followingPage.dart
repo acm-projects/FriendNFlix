@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fnf/profile/profile.dart';
 import 'package:fnf/services/database.dart';
 
+import '../services/Post/PostMethods.dart';
 import '../src/postPage.dart';
 import '../services/navBar.dart';
+import 'PostOverview.dart';
 import 'followerPage.dart';
 
 class Following extends StatefulWidget {
@@ -179,10 +181,13 @@ class _FollowingState extends State<Following> {
                     ),
                     Spacer(),
                     TextButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        List postRefs = await PostMethods().getCurrentUsersPostRefs();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => PostPage(userID: 'please@gmail.com',)),
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PostsOverviewPage(postRefs: postRefs)),
                         );
                       },
                       child:Text(

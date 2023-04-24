@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:fnf/services/Post/Post.dart';
+import 'package:fnf/services/Post/PostsView.dart';
 import '../profile/profile.dart';
 import 'CreatePost4.dart';
 import 'package:fnf/services/Post/PostMethods.dart';
@@ -368,16 +369,24 @@ class _CreatePost7State extends State<CreatePost7> {
 
                                             PostMethods postMethods = PostMethods();
                                             print("here");
-                                            var result = await postMethods
+                                            var newPostRef = await postMethods
                                                 .addPostToFirestore(newPost);
 
-                                            print(result);
+                                            print("id");
+                                            print(newPostRef.id);
+
+
+                                            newPostRef = await PostMethods().getPostRefWithIdentifier(newPostRef.id);
+
+                                            print("should be a ref not doc");
+                                            print(newPostRef);
 
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => Profile(userID: users!.email!)),
+                                                  builder: (context) => PostsViewPage(postRefs: [newPostRef])),
                                             );
+
                                             // todo what happens after post is made
                                           },
                                           child: Text('POST'))

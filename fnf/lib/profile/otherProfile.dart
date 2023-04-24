@@ -1,13 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fnf/profile/topWatchedPage.dart';
 import 'package:fnf/services/database.dart';
 
+import '../services/Post/PostMethods.dart';
 import '../services/navBar.dart' as navBar;
-import '../src/postPage.dart';
+import 'PostOverview.dart';
 import 'followerPage.dart';
 import 'followingPage.dart';
 
 class otherProfile extends StatefulWidget {
-  otherProfile({Key? key, required this.userID}) : super(key: key);
+  otherProfile({Key? key, required this.userID,}) : super(key: key);
   String userID;
 
   @override
@@ -17,12 +20,57 @@ class otherProfile extends StatefulWidget {
 class _otherProfileState extends State<otherProfile> {
   Widget profileWidget = Container();
   dynamic user = null;
+  String? username;
+  int followers = 0;
+  int following = 0;
+  int postCount = 0;
   setUserWithID(String userID) async {
     user = await DatabaseService().getUserWithID(widget.userID);
+    setState(() => user = user);
+  }
+  getUsername(String userID) async {
+    username = await DatabaseService().getUsernameFromID(widget.userID);
+    setState(() => username = username);
+  }
+
+  getPostCount(String userID) async {
+    postCount = await DatabaseService().getPostCount(widget.userID);
+    setState(() => postCount = postCount);
+  }
+  getFollowers(String userID) async {
+    followers = await DatabaseService().getNumFollowersFromID(widget.userID);
+    setState(() => followers = followers);
+  }
+  getFollowing(String userID) async {
+    following = await DatabaseService().getNumFollowingFromID(widget.userID);
+    setState(() => following = following);
+  }
+  Follow(String userID) async {
+    final loggedInUser = FirebaseAuth.instance.currentUser?.uid;
+
+    dynamic followed = DatabaseService().follow(loggedInUser!, userID);
+    if(followed) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => otherProfile(userID: widget.userID)),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    getUsername(widget.userID);
+    setUserWithID(widget.userID);
+    getFollowers(widget.userID);
+    getFollowing(widget.userID);
+    getPostCount(widget.userID);
+    buildProfileWidget();
+    //Follow(widget.userID);
+    super.initState();
   }
 
   buildProfileWidget() async {
-    dynamic data = user.data();
 
     profileWidget = Scaffold(
         floatingActionButton: FloatingActionButton.large(
@@ -35,7 +83,13 @@ class _otherProfileState extends State<otherProfile> {
             style: TextStyle(
                 color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
           ),
-          onPressed: () {},
+          onPressed: () {
+            // call database to do follow method
+            // check if database returns true, then push back to this page to reload numbers
+
+
+
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         bottomNavigationBar: navBar.navBar(),
@@ -55,146 +109,153 @@ class _otherProfileState extends State<otherProfile> {
 
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const <Widget>[
+                    children: <Widget>[
                       CircleAvatar(
+                        minRadius: 70,
+                        backgroundColor: Color(0xFFAF3037),
                         child: CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 68.0,
-                          child: Icon(
-                            Icons.person,
-                            size: 100.0,
-                            color: Colors.black,
+                          child: ElevatedButton(
+                            child: const Icon(
+                              Icons.person,
+                              size: 100.0,
+                              color: Colors.black,
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(),
+                              padding: EdgeInsets.all(20),
+                              backgroundColor: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        otherProfile(userID: widget.userID)),
+                              );
+                            },
                           ),
                         ),
-                        backgroundColor: Color(0xFFAF3037),
-                        minRadius: 70.0,
                       ),
                     ]),
 
                 Container(
                   child: Center(
                     child: Text(
-                      data["username"],
+                      username ?? "",
+                      //widget.userID,
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
 
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Padding(
-                    padding: EdgeInsets.only(bottom: 20),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color(0xFFEAE2B7).withOpacity(0),
-                                // Color(0xFFEAE2B7).withOpacity(0.4),
-                                elevation: 0.0,
-                                shadowColor: Colors.transparent,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Followers(userRef: user, userID: widget.userID)),
-                                );
-                              },
-                              child: Column(children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                ),
-                                Text(
-                                  data["followers"].length.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  ' Followers',
-                                  style: TextStyle(
-                                      color: Colors.black45,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ])),
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Following(userRef: user, userID: widget.userID)),
-                            );
+                //
+                //
+                //
+                //
+                Row(children: [
+                  //Spacer(),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(18, 10, 40, 0),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Followers(userRef: user, userID: widget.userID)),
+                      );
+                    },
+                    child: Text(
+                      followers
+                          .toString(),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  //Spacer(),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(3, 10, 55, 0),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Following(userRef: user, userID: widget.userID!)),
+                      );
+                    },
+                    child: Text(
+                      following
+                          .toString(), // NEED TO FIX NULL CALL ON DATA PROBLEM
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  //Spacer(),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 55, 0),
+                  ),
+                  TextButton(
+                      onPressed:() async {
+                        List postRefs = await PostMethods().getCurrentUsersPostRefs();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PostsOverviewPage(postRefs: postRefs)),
+                        );
+                      },
+                      child: Text(
+                        postCount.toString(),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      )),
+                  const Spacer()
+                ]),
+                //),
 
+                Row(children: const [
+                  Spacer(),
+                  Text(
+                    ' Followers',
+                    style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  Spacer(),
+                  Text(
+                    'Following',
+                    style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  Spacer(),
+                  Text(
+                    'Posts',
+                    style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  Spacer()
+                ]),
 
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color(0xFFEAE2B7).withOpacity(0),
-                                // Color(0xFFEAE2B7).withOpacity(0.4),
-                                elevation: 0.0,
-                                shadowColor: Colors.transparent,
-                              ),
-                              child: Column(children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                ),
-                                Text(
-                                  data["following"].length.toString(),
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  'Following',
-                                  style: TextStyle(
-                                      color: Colors.black45,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ])),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Color(0xFFEAE2B7).withOpacity(0),
-                                // Color(0xFFEAE2B7).withOpacity(0.4),
-                                elevation: 0.0,
-                                shadowColor: Colors.transparent,
-                              ),
-                              onPressed: () {
-                                print("clicked posts");
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PostPage(userID: "please@gmail.com")),
-                                );
-                              },
-                              child: Column(children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                ),
-                                Text(
-                                  "500K",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  'Posts',
-                                  style: TextStyle(
-                                      color: Colors.black45,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ])),
-                        ])),
+                Row(children: const [Text(' ')]),
+
                 Container(
                   child: Center(
                     child: ClipRRect(
@@ -202,29 +263,47 @@ class _otherProfileState extends State<otherProfile> {
                       child: Container(
                         height: 100,
                         width: 370,
-                        color: Color(0xFFEAE2B7).withOpacity(0.4),
+                        color: const Color(0xFFEAE2B7).withOpacity(0.4),
+                        child: Container(
+                          child: const Text(
+                            "   Please has served faithfully as our dummy account throughout the design"
+                                " and testing process, thank you Please",
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
 
-                Row(children: [Text(' ')]),
+                Row(children: const [Text(' ')]),
 
                 Container(
                   child: Align(
                     alignment: Alignment(-0.75, 0.0),
-                    child: Text(
-                      "Favorite Shows",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TopList(userRef: null)),
+                        );
+                      },
+                      child: Text(
+                        "Favorite Shows",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
                 ),
 
-                Row(children: [Text(' ')]),
+                Row(children: const [Text(' ')]),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -232,25 +311,26 @@ class _otherProfileState extends State<otherProfile> {
                     Container(
                       height: 90,
                       width: 90,
-                      color: Color(0xFFEAE2B7).withOpacity(0.4),
+                      color: const Color(0xFFEAE2B7).withOpacity(0.4),
                     ),
                     Container(
                       height: 90,
                       width: 90,
-                      color: Color(0xFFEAE2B7).withOpacity(0.4),
+                      color: const Color(0xFFEAE2B7).withOpacity(0.4),
                     ),
                     Container(
                       height: 90,
                       width: 90,
-                      color: Color(0xFFEAE2B7).withOpacity(0.4),
+                      color: const Color(0xFFEAE2B7).withOpacity(0.4),
                     ),
                   ],
                 ),
 
-                Row(children: [Text(' ')]),
+                Row(children: const [Text(' ')]),
 
+                /*
                 Container(
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment(-0.75, 0.0),
                     child: Text(
                       "Average Rating",
@@ -263,26 +343,28 @@ class _otherProfileState extends State<otherProfile> {
                   ),
                 ),
 
-                Row(children: [Text(' ')]),
+
+                Row(children: const [Text(' ')]),
 
                 Container(
                   child: Align(
-                    alignment: Alignment(-0.35, 0.0),
+                    alignment: const Alignment(-0.35, 0.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(45),
                       child: Container(
                         height: 40,
                         width: 325,
-                        color: Color(0xFFEAE2B7).withOpacity(0.4),
+                        color: const Color(0xFFEAE2B7).withOpacity(0.4),
                       ),
                     ),
                   ),
                 ),
+                 */
 
-                Row(children: [Text(' ')]),
+                Row(children: const [Text(' ')]),
 
                 Container(
-                  child: Align(
+                  child: const Align(
                     alignment: Alignment(-0.75, 0.0),
                     child: Text(
                       "Achievements",
@@ -295,7 +377,7 @@ class _otherProfileState extends State<otherProfile> {
                   ),
                 ),
 
-                Row(children: [Text(' ')]),
+                Row(children: const [Text(' ')]),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -322,23 +404,11 @@ class _otherProfileState extends State<otherProfile> {
                     ),
                   ],
                 ),
+                Row(children: const [Text(' ')]),
               ]),
         ));
     setState(() {});
   }
-
-  void setUserProfile() async {
-    await setUserWithID(widget.userID);
-    buildProfileWidget();
-  }
-
-  @override
-  void initState() {
-    setUserProfile();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return profileWidget;

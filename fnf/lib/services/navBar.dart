@@ -77,6 +77,9 @@ class navBar extends StatefulWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Profile(userID: user!.email!)),
+                                      //otherProfile(userID: user!.email!)),
+                                      //Profile(userID: user!.email!)),
+
                             );
                           },
                           icon: const Icon(

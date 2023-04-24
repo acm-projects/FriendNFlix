@@ -191,6 +191,7 @@ class PostMethods {
         "postIds" : FieldValue.arrayUnion([postRef.id])
       });
 
+      return postRef;
       print("finito");
     }
 

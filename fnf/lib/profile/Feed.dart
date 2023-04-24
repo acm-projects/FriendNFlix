@@ -4,21 +4,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fnf/services/database.dart';
+import 'package:fnf/services/auth.dart';
 
-import '../navBar.dart';
-import 'CommentsView.dart';
-import 'PostMethods.dart';
+import '../services/Calendar/Calendar.dart';
+import '../services/Post/CommentsView.dart';
+import '../services/Post/PostMethods.dart';
+import '../services/navBar.dart';
+import '../src/login.dart';
 
-class PostsViewPage extends StatefulWidget {
-  PostsViewPage({Key? key, required this.postRefs}) : super(key: key);
-  List<dynamic> postRefs;
+
+class FeedPage extends StatefulWidget {
+  FeedPage({Key? key}) : super(key: key);
 
   @override
-  State<PostsViewPage> createState() => _PostsViewPageState();
+  State<FeedPage> createState() => _FeedPageState();
+
 }
 
-class _PostsViewPageState extends State<PostsViewPage> {
+class _FeedPageState extends State<FeedPage> {
   final users = FirebaseAuth.instance.currentUser;
   Map<String, String> postAuthors = {};
   Map<String, bool> postsShowingFront = {};
@@ -28,23 +31,28 @@ class _PostsViewPageState extends State<PostsViewPage> {
   bool _updatingLikes = false;
   List<Widget> postViewWidgets = [];
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  List<dynamic> postRefs = [];
 
+  final user = FirebaseAuth.instance.currentUser;
+  final AuthService _auth = AuthService();
 
   @override
   void initState() {
+    print("ayo boss");
     setUp();
 
 
     super.initState();
   }
 
-  setUp() async{
+  setUp() async {
+    postRefs = await PostMethods().getCurrentUsersPostRefs();
     await _setInitialMapValues();
-    await _buildPostViewWidgets();
+    _buildPostViewWidgets();
   }
 
   _setInitialMapValues() async {
-    for (dynamic postRef in widget.postRefs) {
+    for (dynamic postRef in postRefs) {
       // all posts should start facing forward
       String postId = await postRef.id;
 
@@ -55,14 +63,8 @@ class _PostsViewPageState extends State<PostsViewPage> {
       // in user has liked the post
 
       final docSnap = await postRef.get();
-      print("snapshot");
-      print(docSnap);
       final post = docSnap.data(); // Convert to Post object
 
-      String username = await DatabaseService().getUsernameFromID(post.postAuthorId);
-
-      postAuthors[postId] = username;
-      print(post);
       bool hasLikedPost = false;
       for (String user in post.likedBy!) {
         if (user == users!.email) {
@@ -103,9 +105,12 @@ class _PostsViewPageState extends State<PostsViewPage> {
 
   _buildPostViewWidgets() async {
 
+    print("building");
+    print(postRefs);
     postViewWidgets = [];
 
-    for (dynamic postRef in widget.postRefs) {
+    for (dynamic postRef in postRefs) {
+      print("making widget");
       final docSnap = await postRef.get();
       final post = docSnap.data(); // Convert to Post object
       String postId = postRef.id;
@@ -158,6 +163,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
       Widget imageWidget = Image.asset("assets/images/AlpinistExample.jpg", fit: BoxFit.fitHeight);
       if(imageURL != null && imageURL.isNotEmpty)
         imageWidget = Image.network(imageURL, fit: BoxFit.fitHeight);
+
       Widget postViewWidget;
       if (postsShowingFront![postId]!) {
         postViewWidget = Container(
@@ -424,7 +430,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                         SizedBox(width: 5),
                         Expanded(
                           child: Text(
-                             _postAuthorUsername,
+                            '@alexa_r posted',
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               color: Colors.white,
@@ -498,94 +504,80 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     SizedBox(
                       height:
                       150, // move up and down (the review info that's being displayed)
-                      child:
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 60,
-                          right: 60
-                        ),
-                        child:
-                        SingleChildScrollView(
-                          child: Column(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Title: ${post.filmTitle}',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(child: Text(
-                                      'Thoughts: ${post.body}',
-                                      overflow: TextOverflow.clip,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    )
-                                    ),
-                                  ]
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Phone Level: ${post.phoneLevel}',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Watch Date:  ${post.watchMonth} / ${post.watchDay} / ${post.watchYear}',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Tags: TODO',
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                'Title: ${post.filmTitle}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ],
-                          )
-                        ),
-
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Thoughts ${post.body}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Phone Level: ${post.phoneLevel}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Watch Date:  ${post.watchMonth} / ${post.watchDay} / ${post.watchYear}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Tags: TODO',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -597,10 +589,17 @@ class _PostsViewPageState extends State<PostsViewPage> {
     }
 
 
+    if(postViewWidgets.isEmpty){
+      print("taggg");
+      postViewWidgets.add(
+        Center(
+          child: Text("Follow someone to see their posts here!")
+        )
+      );
+    }
 
-    setState((){
-      print("got here");
-      print(postViewWidgets);
+    setState(() {
+
     });
   }
 
@@ -610,29 +609,67 @@ class _PostsViewPageState extends State<PostsViewPage> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(""),
-          leading: IconButton(
-            onPressed: () {
-    Navigator.pop(context);
-    },
-      icon: Icon(
-            Icons.arrow_back_ios,
-            color: Color(0xFFAF3037),
-            size: 30,
-          ),
-          ),
-          // title: Text("Posts",
-          //     style: TextStyle(
-          //         color: Color(0xFFAF3037),
-          //         fontSize: 25,
-          //         fontWeight: FontWeight.bold)),
-          // centerTitle: true,
-          backgroundColor: Colors.white,
-          actionsIconTheme: const IconThemeData(
-            color: Colors.green,
-            size: 30,
-          ),
+          backgroundColor: const Color(0xFFFFF7F5),
           elevation: 0,
+          toolbarHeight: 90, // set the height of the AppBar
+          actions: [
+            ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Color(0xFFAF3037),
+                BlendMode.srcIn,
+              ),
+              child: IconButton( // SEARCH BUTTON AND ICON
+                onPressed: () {},
+                icon: const Icon(Icons.search),
+                iconSize: 50, // increase the size of the icon
+              ),
+            ),
+            ColorFiltered( // MESSAGE BUTTON AND ICON
+              colorFilter: const ColorFilter.mode(
+                Color(0xFFAF3037),
+                BlendMode.srcIn,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CalendarPage()),
+                  );
+                },
+                icon: const Icon(Icons.calendar_month_rounded),
+                iconSize: 50, // increase the size of the icon
+              ),
+            ),
+          ],
+          leading: SizedBox(
+              width: 300, // increase the width of the logo
+              height: 300, // increase the height of the logo
+              child: IconButton(
+                icon: Image.asset(
+                  'assets/images/logo1.png',
+                  width: 300,
+                  height: 300,
+                ), onPressed: () {
+                _auth.signOut();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Login()),
+                );
+              },
+              )
+          ),
+          centerTitle: true,
+          title: const Text(
+            'FriendNFlix',
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 36, // increase the font size of the title
+            ),
+          ),
         ),
         bottomNavigationBar: navBar(),
         body: SingleChildScrollView(

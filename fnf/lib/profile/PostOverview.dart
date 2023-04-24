@@ -191,9 +191,12 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
               ),
               Column(children: [
                 // show title that post is about
-                Text(post.filmTitle.isEmpty ? "BLANK TITLE" : post.filmTitle,
+                Expanded(child:
+                Text(
+                    post.filmTitle,
+                    overflow: TextOverflow.ellipsis,
                     style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 18))),
                 // row of stars
                 Row(children: [
                   Icon(
