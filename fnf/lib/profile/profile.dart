@@ -241,15 +241,23 @@ class _profilePage extends State<Profile> {
                         width: 370,
                         color: const Color(0xFFEAE2B7).withOpacity(0.4),
                         child: Container(
-                          child: const Text(
-                            "   Please has served faithfully as our dummy account throughout the design"
-                            " and testing process, thank you Please",
+                          child:
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              left: 15,
+                              right: 15,
+                              bottom: 10
+                            ),
+                            child: const Text(
+                            " ",
                             style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 15,
+                                color: Colors.black,
+                                fontSize: 18,
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
+                        )
                       ),
                     ),
                   ),

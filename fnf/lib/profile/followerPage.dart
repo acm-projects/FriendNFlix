@@ -222,7 +222,7 @@ class _FollowersState extends State<Followers> {
                             //"   " + widget.userRef.data()["followers"].length.toString() + " Followers",
                             "   " + numFollowers.toString() + " Followers",
                             style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
                       ),

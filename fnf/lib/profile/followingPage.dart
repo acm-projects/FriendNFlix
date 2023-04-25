@@ -227,9 +227,9 @@ class _FollowingState extends State<Following> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             //"   " + widget.userRef.data()["following"].length.toString() + " Following",
-                            numFollowing.toString(),
+                            "   " + numFollowing.toString() + " Following",
                             style:
-                            TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                           ),
                         ),
                       ),

@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fnf/services/Post/PostsView.dart';
+import 'package:fnf/src/register.dart';
 import '../profile/Feed.dart';
 import '../profile/otherProfile.dart';
 import 'login.dart';
-import 'viewPost.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,12 +23,11 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const Login();
+            return Register();
           } else {
-            return FeedPage();
+            return const Login();
           }
         },
-
         ),
       );
   }

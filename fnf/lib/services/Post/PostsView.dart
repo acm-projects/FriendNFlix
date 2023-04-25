@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fnf/services/database.dart';
 
+import '../../profile/PostOverview.dart';
 import '../navBar.dart';
 import 'CommentsView.dart';
 import 'PostMethods.dart';
@@ -666,7 +667,13 @@ class _PostsViewPageState extends State<PostsViewPage> {
           title: Text(""),
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              //Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          PostsOverviewPage(postRefs: widget.postRefs)));
+
             },
             icon: Icon(
               Icons.arrow_back_ios,

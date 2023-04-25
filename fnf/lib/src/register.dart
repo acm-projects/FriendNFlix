@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fnf/src/login.dart';
 import 'package:fnf/services/auth.dart';
-import 'package:fnf/src/viewPost.dart';
+
+import '../profile/Feed.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -55,6 +56,9 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
                     //obscureText: true,
+                    style: TextStyle(
+                        color: Colors.white
+                    ),
                     controller: usernameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -77,11 +81,16 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
                     //obscureText: true,
+                    style: TextStyle(
+                        color: Colors.white
+                    ),
                     controller: emailController,
                     decoration: InputDecoration(
+
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
+
                       labelText: 'Enter Email',
                       labelStyle: const TextStyle(
                         fontFamily: 'Montserrat',
@@ -100,6 +109,9 @@ class _RegisterState extends State<Register> {
                   child: TextField(
                     obscureText: true,
                     controller: passwordController,
+                    style: TextStyle(
+                        color: Colors.white
+                    ),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -122,6 +134,9 @@ class _RegisterState extends State<Register> {
                   child: TextField(
                     obscureText: true,
                     controller: confPassController,
+                    style: TextStyle(
+                        color: Colors.white
+                    ),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -141,7 +156,6 @@ class _RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 20),
                 Center(
-
                   child: Form(
                     key: _formKey,
                     child: SizedBox(
@@ -161,7 +175,7 @@ class _RegisterState extends State<Register> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => viewPost()),
+                                    builder: (context) => FeedPage()),
                               );
                             }
                             else {

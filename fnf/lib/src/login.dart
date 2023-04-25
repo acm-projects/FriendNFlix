@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fnf/profile/Feed.dart';
 import 'package:fnf/services/auth.dart';
-import 'viewPost.dart';
 import 'register.dart';
 
 class Login extends StatefulWidget {
@@ -60,6 +59,9 @@ class _LoginState extends State<Login> {
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
                     //obscureText: true,
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
                     controller: emailController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -81,6 +83,9 @@ class _LoginState extends State<Login> {
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
+                    style: TextStyle(
+                        color: Colors.white
+                    ),
                     obscureText: true,
                     controller: passwordController,
                     decoration: InputDecoration(

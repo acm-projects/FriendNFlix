@@ -49,6 +49,29 @@ class _FeedPageState extends State<FeedPage> {
 
   setUp() async {
     postRefs = await PostMethods().getCurrentUsersPostRefs();
+
+    postRefs = [];
+    String loggedInUserId = user!.email!;
+    var userRef = _db.collection("users").doc(loggedInUserId);
+    var userSnap = await userRef.get();
+    var userData = userSnap.data();
+    List<dynamic>? followingDynamics = userData!["following"];
+    if(followingDynamics == null) followingDynamics = [];
+    List<String> following = [];
+    for(dynamic followingDynamic in followingDynamics){
+      following.add(followingDynamic.toString());
+    }
+
+    for(String followingId in following){
+      print("id");
+      print(followingId);
+      List? tempPostRefs = await PostMethods().getUsersPostRefs(followingId);
+      if (tempPostRefs != null && tempPostRefs.isNotEmpty) {
+        postRefs.addAll(await PostMethods().getUsersPostRefs(followingId));
+      }
+    }
+
+
     await _setInitialMapValues();
     _buildPostViewWidgets();
   }
@@ -67,6 +90,8 @@ class _FeedPageState extends State<FeedPage> {
       }
     }
     for (dynamic postRef in postRefs) {
+      print("type");
+      print(postRef);
       // all posts should start facing forward
       String postId = await postRef.id;
       postsShowingFront[postId] = true;
@@ -224,9 +249,22 @@ class _FeedPageState extends State<FeedPage> {
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        SizedBox(width: 2),
-                        Image.asset("assets/images/sampleProfile.png",
-                            width: 75, height: 75),
+                        SizedBox(width: 10),
+                        /*Image.asset("assets/images/sampleProfile.png",
+                            width: 75, height: 75), */
+                        CircleAvatar(
+                          minRadius: 25,
+                          backgroundColor: Color(0xFFAF3037),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 22.0,
+                              child: const Icon(
+                                Icons.person,
+                                size: 40,
+                                color: Colors.black,
+                              ),
+                          ),
+                        ),
                         SizedBox(width: 5),
                         Expanded(
                           child: Text(
@@ -724,15 +762,17 @@ class _FeedPageState extends State<FeedPage> {
               ),
             ),
           ],
-          leading: SizedBox(
-              width: 300, // increase the width of the logo
-              height: 300, // increase the height of the logo
-              child: IconButton(
-                icon: Image.asset(
-                  'assets/images/logo1.png',
-                  width: 300,
-                  height: 300,
-                ), onPressed: () {
+
+          leading: IconButton(
+                icon: Container(
+                  width: 55,
+                  height: 55,
+                  child: Image.asset(
+                      'assets/images/logo1.png',
+                      fit: BoxFit.fitHeight
+                  ),
+                ),
+                onPressed: () {
                 _auth.signOut();
                 Navigator.push(
                   context,
@@ -740,7 +780,6 @@ class _FeedPageState extends State<FeedPage> {
                       builder: (context) => Login()),
                 );
               },
-              )
           ),
           centerTitle: true,
           title: const Text(

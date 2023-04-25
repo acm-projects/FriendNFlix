@@ -2,12 +2,9 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fnf/services/Post/PostMethods.dart';
 
 import '../profile/otherProfile.dart';
-import 'Classes/Post.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -66,7 +63,10 @@ class _SearchPageState extends State<SearchPage> {
           print(userFollowersIds);
           // if logged in user is NOT following the searched user
           Widget buttonToDisplay; // either a follow or unfollow button
-          if (!userFollowersIds.contains(loggedInUser!.email)) {
+          if(userSnap.id == loggedInUser!.email){
+            buttonToDisplay = SizedBox();
+          }
+          else if (!userFollowersIds.contains(loggedInUser!.email)) {
             print("making follow button");
             // make button follow button
             buttonToDisplay = ElevatedButton(
@@ -123,10 +123,12 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
               onPressed: () {
+              print("printing id");
+                print(userSnap.id);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => otherProfile(userID: userSnap.id)),
+                      builder: (context) => otherProfile(userID: user["email"])),
                   //otherProfile(userID: user!.email!)),
                   //Profile(userID: user!.email!)),
                 );

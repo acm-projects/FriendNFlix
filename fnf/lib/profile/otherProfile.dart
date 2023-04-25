@@ -60,16 +60,30 @@ class _otherProfileState extends State<otherProfile> {
 
   @override
   void initState() {
-    getUsername(widget.userID);
-    setUserWithID(widget.userID);
-    getFollowers(widget.userID);
-    getFollowing(widget.userID);
-    getPostCount(widget.userID);
-    buildProfileWidget();
+    setUp();
+    // print(widget.userID);
+    //
+    // getUsername(widget.userID);
+    // setUserWithID(widget.userID);
+    // getFollowers(widget.userID);
+    // getFollowing(widget.userID);
+    //
+    // getPostCount(widget.userID);
+    // buildProfileWidget();
+
     //Follow(widget.userID);
     super.initState();
   }
 
+  setUp()async {
+    await getUsername(widget.userID);
+    await setUserWithID(widget.userID);
+    await getFollowers(widget.userID);
+    await getFollowing(widget.userID);
+
+    await getPostCount(widget.userID);
+    buildProfileWidget();
+  }
   buildProfileWidget() async {
 
     profileWidget = Scaffold(
@@ -172,8 +186,7 @@ class _otherProfileState extends State<otherProfile> {
                       );
                     },
                     child: Text(
-                      followers
-                          .toString(),
+                      followers.toString(),
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
@@ -265,13 +278,20 @@ class _otherProfileState extends State<otherProfile> {
                         width: 370,
                         color: const Color(0xFFEAE2B7).withOpacity(0.4),
                         child: Container(
-                          child: const Text(
-                            "   Please has served faithfully as our dummy account throughout the design"
-                                " and testing process, thank you Please",
-                            style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 10,
+                                left: 15,
+                                right: 15,
+                                bottom: 10
+                            ),
+                            child: const Text(
+                                "big head, big dreams, big bank account 🤑",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
                         ),
                       ),

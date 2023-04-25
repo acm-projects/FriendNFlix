@@ -6,7 +6,6 @@ import 'package:fnf/profile/otherProfile.dart';
 
 import '../createPost/CreatePost1.dart';
 import '../profile/profile.dart';
-import '../src/viewPost.dart';
 import 'database.dart';
 
 class navBar extends StatefulWidget {
