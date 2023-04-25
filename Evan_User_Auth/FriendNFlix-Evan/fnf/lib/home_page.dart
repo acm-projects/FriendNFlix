@@ -5,6 +5,7 @@ import 'package:fnf/fnf/PostsOverview.dart';
 import 'package:fnf/fnf/WantToWatch.dart';
 import 'package:fnf/fnf/posts_index.dart';
 
+import 'GetFavoriteShows.dart';
 import 'fnf/Calendar.dart';
 import 'fnf/Classes/Post.dart';
 import 'fnf/CreatePost1.dart';
@@ -134,7 +135,22 @@ class HomePage extends StatelessWidget {
                       builder: (context) => SearchPage()),
                 );
               },
-              child: Text('Want To Watch'),
+              child: Text('Search Page'),
+            ),
+            ElevatedButton(
+              style:
+              ElevatedButton.styleFrom(backgroundColor: Colors.lightGreenAccent),
+              onPressed: () async {
+                // get posts to pass to PostsOverviewPage to display
+                List postRefs = await PostMethods().getCurrentUsersPostRefs();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GetFavoriteShowsPage()),
+                );
+              },
+              child: Text('Get favorite shows'),
             ),
           ],
         ),

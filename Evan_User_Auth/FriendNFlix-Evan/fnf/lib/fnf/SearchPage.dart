@@ -28,20 +28,50 @@ class _SearchPageState extends State<SearchPage> {
   _setSearchRecommendations() async {
     List matchingUserRefs = [];
     List matchingUserSnapshots = [];
+    List<int> numPostsForEveryUser = [];
     print("matching users objects");
     print(_matchingUsers);
+
 
     for (dynamic user in _matchingUsers) {
       print("another");
       var userRef = _db.collection("users").doc(user["email"]);
+      print("USER OBJECT");
+      print(user);
+      print("USER REFERENCE");
+      print(userRef);
       matchingUserRefs.add(userRef);
       var userSnapshot = await userRef.get();
       matchingUserSnapshots.add(userSnapshot);
+      var postQuerySnapshot = await userRef.collection("posts").get();
+      if (postQuerySnapshot == null || postQuerySnapshot.docs == null) {
+        numPostsForEveryUser.add(0);
+      } else
+        numPostsForEveryUser.add(postQuerySnapshot.docs.length);
     }
 
     print("matchingUserRefs");
     print(matchingUserRefs);
 
+    if(_matchingUsers.length == 0) {
+      _searchRecommendations = ListView.builder(
+          itemCount: 1,
+          itemBuilder: (context, index){
+            return ListTile(title: Padding(
+              padding: EdgeInsets.only(
+              ),
+              child: Center(
+                child: Text("0 results",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black
+                ),)
+              )
+            ),);
+
+          });
+      return;
+    }
     _searchRecommendations = ListView.builder(
         itemCount: _matchingUsers.length,
         itemBuilder: (context, index) {
@@ -56,21 +86,33 @@ class _SearchPageState extends State<SearchPage> {
 
           List<dynamic>? userFollowers = userData["followers"];
 
+          // top
+
           if (userFollowers == null) userFollowers = [];
           List<String> userFollowersIds = [];
+
+          
+          int numPosts = numPostsForEveryUser[index];
 
           for (var follower in userFollowers) {
             userFollowersIds.add(follower);
           }
 
+          int numFollowers = userFollowersIds.length;
+
           print("printing followers");
           print(userFollowersIds);
           // if logged in user is NOT following the searched user
           Widget buttonToDisplay; // either a follow or unfollow button
-          if (!userFollowersIds.contains(loggedInUser!.email)) {
+          if (userSnap.id == loggedInUser!.email) {
+                      buttonToDisplay = SizedBox();
+                    }
+          else if (!userFollowersIds.contains(loggedInUser!.email)) {
             print("making follow button");
             // make button follow button
             buttonToDisplay = ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.lightGreenAccent),
                 onPressed: () async {
                   print("tag");
                   await userRef.update({
@@ -91,11 +133,20 @@ class _SearchPageState extends State<SearchPage> {
                   await _setSearchRecommendations();
                   setState(() {});
                 },
-                child: Text("Follow"));
+                child: SizedBox(
+                    width: 75,
+                    height: 35,
+                    child: Center(
+                        child: Text(
+                      "Follow",
+                      style: TextStyle(fontSize: 18),
+                    ))));
           } else {
             // make button unfollow button
             print("making unfollow button");
             buttonToDisplay = ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
                 onPressed: () async {
                   await userRef.update({
                     "followers": FieldValue.arrayRemove([loggedInUser!.email])
@@ -113,20 +164,62 @@ class _SearchPageState extends State<SearchPage> {
                   await _setSearchRecommendations();
                   setState(() {});
                 },
-                child: Text("Unfollow"));
+                child: SizedBox(
+                    width: 75,
+                    height: 35,
+                    child: Center(
+                        child: Text(
+                      "Unfollow",
+                      style: TextStyle(fontSize: 18),
+                    ))));
           }
 
           return ListTile(
-            title: Text(
-              user["username"],
-              style: TextStyle(
-                color: Colors.red,
-              ),
-            ),
+            title: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                child: Row(
+                  children: [
+                    // imageWidget
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // show title that post is about
+
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    child: Text(
+                                  user["username"],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                  overflow: TextOverflow.ellipsis,
+                                ))
+                              ]),
+                          // button to click on to go to post view
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    right: 2
+                                  ),
+                                  child: Text('${numFollowers} followers')
+                                ),
+                                Text('${numPosts} posts')
+                              ])
+                        ]),
+                  ],
+                )),
             trailing: buttonToDisplay,
           );
         });
-    setState(() {});
+
+    setState(() {
+      print("printing search recommendations");
+      print(_searchRecommendations);
+    });
   }
 
   hasBeginningMatch(String shorterString, String longerString) {
@@ -152,6 +245,7 @@ class _SearchPageState extends State<SearchPage> {
       if (user["username"] == null) continue;
 
       if (hasBeginningMatch(user["username"], value)) {
+        print('I believe ${user["username"]} matches ${value}');
         _matchingUsers.add(user);
       }
 
@@ -178,11 +272,13 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Search Page"),
-        ),
         body: Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.only(
+              top: 45,
+              left: 15,
+              right: 15,
+              bottom: 15
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +288,17 @@ class _SearchPageState extends State<SearchPage> {
                     setMatchingUsers(value);
                     _setSearchRecommendations();
                   },
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18
+                  ),
                   decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3, color: Color(0xFFAF3037))
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 3, color: Color(0xFFAF3037))
+                    ),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -200,7 +306,13 @@ class _SearchPageState extends State<SearchPage> {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Search for a user",
-                      prefixIcon: Icon(Icons.search),
+                      hintStyle: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18
+                      ),
+                      prefixIcon: Icon(Icons.search,
+                      size: 25,
+                      color: Colors.red,),
                       prefixIconColor: Colors.grey),
                 ),
                 Expanded(child: _searchRecommendations)

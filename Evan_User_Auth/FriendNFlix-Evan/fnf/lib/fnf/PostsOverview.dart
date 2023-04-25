@@ -100,7 +100,6 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
   // }
 
   buildPostOverviewWidgets() async {
-
     // File file = File("imdb_top_1000.csv");
     // print("BEFORE file");
     // List<String> lines = file.readAsLinesSync();
@@ -113,22 +112,27 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
     for (dynamic postRef in widget.postRefs) {
       final docSnap = await postRef.get();
       final post = docSnap.data(); // Convert to Post object
-      final moviesQuery = await _db.collection("movies").where("title", isEqualTo: post.filmTitle).get();
+      final moviesQuery = await _db
+          .collection("movies")
+          .where("title", isEqualTo: post.filmTitle)
+          .get();
       String? imageURL = "";
 
-      if(moviesQuery != null && moviesQuery.docs != null && moviesQuery.docs.length > 0){
+      if (moviesQuery != null &&
+          moviesQuery.docs != null &&
+          moviesQuery.docs.length > 0) {
         print('reached here for post about ${post.filmTitle}');
 
         final movieRef = moviesQuery.docs[0];
         imageURL = movieRef.data()["posterLink"];
-        if(imageURL == null) {
+        if (imageURL == null) {
           print("could not find a url");
           imageURL = "";
         }
       }
 
       Widget imageWidget;
-      if(imageURL == ""){
+      if (imageURL == "") {
         imageWidget = Container(
           height: 160,
           width: 140,
@@ -146,10 +150,9 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
         );
       } else {
         imageWidget = Container(
-          height: 160,
-          width: 140,
-          child: Image.network(imageURL, fit: BoxFit.fitHeight)
-        );
+            height: 160,
+            width: 140,
+            child: Image.network(imageURL, fit: BoxFit.fitHeight));
       }
 
       // set the correct amount of stars to yellow based on user rating
@@ -179,13 +182,19 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
               Padding(
                 padding: EdgeInsets.all(16),
               ),
-              Column(children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 // show title that post is about
-                Text(post.filmTitle.isEmpty ? "BLANK TITLE" : post.filmTitle,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Container(
+                      child: Text(
+                    post.filmTitle.isEmpty ? "BLANK TITLE" : post.filmTitle,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    overflow: TextOverflow.ellipsis,
+                  ))
+                ]),
                 // row of stars
-                Row(children: [
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Icon(
                     Icons.star,
                     color: starColors[0],
@@ -213,22 +222,22 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
                   ),
                 ]),
                 // button to click on to go to post view
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey),
-                    onPressed: () {
-                      print('clicked on button for ${post.filmTitle} post');
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey),
+                      onPressed: () {
+                        print('clicked on button for ${post.filmTitle} post');
 
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  PostsViewPage(postRefs: [postRef])));
-                    },
-                    child: Text("View Details",
-                    style: TextStyle(
-                      fontSize: 18
-                    )))
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PostsViewPage(postRefs: [postRef])));
+                      },
+                      child:
+                          Text("View Details", style: TextStyle(fontSize: 18)))
+                ])
               ]),
             ],
           ));
@@ -253,15 +262,14 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
         appBar: AppBar(
           title: Text(""),
           leading: IconButton(
-            onPressed: (){
-    Navigator.pop(context);
-    },
-        icon: Icon(
-          Icons.arrow_back_ios,
-          color: Color(0xFFAF3037),
-          size: 30,
-        )
-    ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Color(0xFFAF3037),
+                size: 30,
+              )),
           // title: Text("Posts",
           //     style: TextStyle(
           //         color: Color(0xFFAF3037),

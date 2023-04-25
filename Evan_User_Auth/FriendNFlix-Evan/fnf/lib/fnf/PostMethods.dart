@@ -73,6 +73,116 @@ class PostMethods {
     return getUsersPostRefs(userIdentifier);
   }
 
+  sortPostRefsByMostStars(List postsRefs) async {
+    List<Post> posts = [];
+    for(var postRef in postsRefs){
+      var postSnap = await postRef.get();
+      var postData = postSnap.data();
+      String postAuthor = postData["postAuthorId"].toString();
+
+      print("check if id is good!");
+      print(postRef.id);
+      print(postSnap.id);
+
+      final ref = db.collection("users").doc(postAuthor).collection("posts").doc(postRef.id).withConverter(
+        fromFirestore: Post.fromFirestore,
+        toFirestore: (Post post, _) => post.toFirestore(),
+      );
+
+      final docSnap = await ref.get();
+      final post = docSnap.data();
+      posts.add(post!);
+    }
+    for(int i = 0; i < posts.length; i++){
+      int indexOfPostWithMostStars = i;
+      int currentHighestStarAmount = posts[i].starRating;
+
+      for(int j = i; j < posts.length; j ++){
+
+        if(posts[j].starRating > currentHighestStarAmount){
+          indexOfPostWithMostStars = j;
+          currentHighestStarAmount = posts[j].starRating;
+        }
+
+      }
+      Post temp = posts[i];
+      posts[i] = posts[indexOfPostWithMostStars];
+      posts[indexOfPostWithMostStars] = temp;
+
+
+    }
+  }
+  void sortPostsByMostStars(List<Post> posts){
+    for(int i = 0; i < posts.length; i++){
+      int indexOfPostWithMostStars = i;
+      int currentHighestStarAmount = posts[i].starRating;
+
+      for(int j = i; j < posts.length; j ++){
+
+        if(posts[j].starRating > currentHighestStarAmount){
+          indexOfPostWithMostStars = j;
+          currentHighestStarAmount = posts[j].starRating;
+        }
+
+      }
+      Post temp = posts[i];
+      posts[i] = posts[indexOfPostWithMostStars];
+      posts[indexOfPostWithMostStars] = temp;
+
+
+    }
+  }
+  void sortPostsByMostRecent(List<Post> posts){
+    for(int i = 0; i < posts.length; i++){
+      int indexOfMostRecentPost = i;
+      Post mostRecentPost = posts[i];
+      DateTime newestPostDate = DateTime(mostRecentPost.watchYear, mostRecentPost.watchMonth, mostRecentPost.watchDay);
+
+      for(int j = i; j < posts.length; j ++){
+
+        Post currentPost = posts[j];
+        DateTime currentPostWatchDate = DateTime(currentPost.watchYear, currentPost.watchMonth, currentPost.watchDay);
+
+        if(currentPostWatchDate.millisecondsSinceEpoch < newestPostDate.millisecondsSinceEpoch){
+          indexOfMostRecentPost = j;
+          mostRecentPost = currentPost;
+          newestPostDate = currentPostWatchDate;
+        }
+
+      }
+      Post temp = posts[i];
+      posts[i] = posts[indexOfMostRecentPost];
+      posts[indexOfMostRecentPost] = temp;
+
+
+    }
+  }
+  // void sortPostRefsByMostRecent(List postRefs){
+  //   for(int i = 0; i < posts.length; i++){
+  //     int indexOfMostRecentPost = i;
+  //     Post mostRecentPost = posts[i];
+  //     DateTime newestPostDate = DateTime(mostRecentPost.watchYear, mostRecentPost.watchMonth, mostRecentPost.watchDay);
+  //
+  //     for(int j = i; j < posts.length; j ++){
+  //
+  //       Post currentPost = posts[j];
+  //       DateTime currentPostWatchDate = DateTime(currentPost.watchYear, currentPost.watchMonth, currentPost.watchDay);
+  //
+  //       if(currentPostWatchDate.millisecondsSinceEpoch < newestPostDate.millisecondsSinceEpoch){
+  //         indexOfMostRecentPost = j;
+  //         mostRecentPost = currentPost;
+  //         newestPostDate = currentPostWatchDate;
+  //       }
+  //
+  //     }
+  //     Post temp = posts[i];
+  //     posts[i] = posts[indexOfMostRecentPost];
+  //     posts[indexOfMostRecentPost] = temp;
+  //
+  //
+  //   }
+  // }
+
   // get user's post REFS
   getUsersPostRefs(String? userIdentifier) async {
     if (userIdentifier == null) return null;
