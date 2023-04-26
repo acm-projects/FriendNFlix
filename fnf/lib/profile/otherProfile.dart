@@ -220,7 +220,11 @@ class _otherProfileState extends State<otherProfile> {
                   ),
                   TextButton(
                       onPressed:() async {
-                        List postRefs = await PostMethods().getCurrentUsersPostRefs();
+                        List postRefs = await PostMethods().getUsersPostRefs(widget.userID);
+
+
+                        print("posts?");
+                        print(postRefs);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

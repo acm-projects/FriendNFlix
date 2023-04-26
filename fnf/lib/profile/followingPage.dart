@@ -182,7 +182,7 @@ class _FollowingState extends State<Following> {
                     Spacer(),
                     TextButton(
                       onPressed: () async {
-                        List postRefs = await PostMethods().getCurrentUsersPostRefs();
+                        List postRefs = await PostMethods().getUsersPostRefs(widget.userID);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

@@ -103,7 +103,11 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
 
   buildPostOverviewWidgets() async {
 
+    print("these are the refs");
+    print(widget.postRefs);
     if(widget.postRefs.isEmpty){
+      print("no posts :(");
+      print(widget.postRefs);
       postOverviewWidgets.add(
           Padding(
               padding: EdgeInsets.only(
@@ -112,11 +116,11 @@ class _PostsOverviewPageState extends State<PostsOverviewPage> {
               child:
               Center(
                   child: Text("Create a post to see it here!",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: "Karla"
-                  ))
+                      style: TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: "Karla"
+                      ))
               )
           ));
       return;

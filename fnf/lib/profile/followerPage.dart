@@ -175,7 +175,7 @@ class _FollowersState extends State<Followers> {
                     Spacer(),
                     TextButton(
                       onPressed: () async {
-                        List postRefs = await PostMethods().getCurrentUsersPostRefs();
+                        List postRefs = await PostMethods().getUsersPostRefs(widget.userID);
                         Navigator.push(
                           context,
                           MaterialPageRoute(

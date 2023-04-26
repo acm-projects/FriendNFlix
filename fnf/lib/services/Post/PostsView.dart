@@ -38,6 +38,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
   @override
   void initState() {
     setUp();
+
     super.initState();
   }
 
@@ -46,22 +47,25 @@ class _PostsViewPageState extends State<PostsViewPage> {
     var userRef = _db.collection("users").doc(users!.email);
     var userSnap = await userRef.get();
     var userData = userSnap.data();
-    List<dynamic>? favoritedFilmsDynamic = userData!["favoritedFilms"];
+    List<dynamic>? favoritedFilmsDynamic = userData?["favoritedFilms"];
+    if(favoritedFilmsDynamic == null) favoritedFilmsDynamic = [];
     List<String> favoritedFilms = [];
 
-    if(favoritedFilmsDynamic != null) {
-      for (dynamic item in favoritedFilmsDynamic) {
-        favoritedFilms.add(item.toString());
-      }
+    for (dynamic item in favoritedFilmsDynamic) {
+      favoritedFilms.add(item.toString());
     }
     print('favoritedFilms = ${favoritedFilms}');
 
     for (dynamic postRef in widget.postRefs) {
+      // postAuthors[postId] = await DatabaseService().getUsernameFromID(authorid);
       // all posts should start facing forward
       String postId = await postRef.id;
+
       postsShowingFront[postId] = true;
+
       // look at all users that have liked the given posts to see if the logged
       // in user has liked the post
+
       final docSnap = await postRef.get();
       final post = docSnap.data(); // Convert to Post object
 
@@ -70,7 +74,6 @@ class _PostsViewPageState extends State<PostsViewPage> {
       print("username:");
       print(username);
       postAuthors[postId] = username;
-
 
       String title = post.filmTitle;
       if (differentFilms.contains(title) == false) {
@@ -93,6 +96,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
       if (!hasLikedPost) {
         likedPosts[postId] = false;
       }
+
       // look at all users that have disliked the given posts to see if the
       // logged in user has disliked the current post
       bool hasDislikedPost = false;
@@ -103,16 +107,10 @@ class _PostsViewPageState extends State<PostsViewPage> {
           break;
         }
       }
+
       if (!hasDislikedPost) {
         dislikedPosts[postId] = false;
       }
-
-      // todo CHECK if user has favorited film
-      // for(String likedUser in post.likedBy!){
-      //   if(likedUser == users!.email){
-      //     likedPosts[post] = true;
-      //   }
-      // }
     }
 
     for (String film in differentFilms) {
@@ -191,6 +189,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
           fit: BoxFit.fitHeight);
       if (imageURL != null && imageURL.isNotEmpty)
         imageWidget = Image.network(imageURL, fit: BoxFit.fitHeight);
+
       Widget postViewWidget;
       if (postsShowingFront![postId]!) {
         postViewWidget = Container(
@@ -215,12 +214,23 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     Row(
                       children: [
                         SizedBox(width: 2),
-                        Image.asset("assets/images/sampleProfile.png",
-                            width: 75, height: 75),
+                        CircleAvatar(
+                          minRadius: 25,
+                          backgroundColor: Color(0xFFAF3037),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 22.0,
+                            child: const Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
                         SizedBox(width: 5),
                         Expanded(
                           child: Text(
-                            "@" + _postAuthorUsername + " posted",
+                            "@" + _postAuthorUsername,
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               color: Colors.white,
@@ -236,7 +246,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     SizedBox(height: 2),
                     Container(width: 250, height: 250, child: imageWidget),
                     Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.centerLeft,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black),
@@ -245,7 +255,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                             _buildPostViewWidgets();
                           },
                           child: Text(
-                            'Show details',
+                            '                      Show details',
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               color: Colors.white,
@@ -342,22 +352,22 @@ class _PostsViewPageState extends State<PostsViewPage> {
 
                             // toggle heart to the opposite of what it is now
                             hasFavoritedFilmMap[post.filmTitle] =
-                                !currentlyFavoritedFilm;
+                            !currentlyFavoritedFilm;
 
                             // todo toggle heart in db
 
                             var userRef =
-                                await _db.collection("users").doc(users!.email);
+                            await _db.collection("users").doc(users!.email);
 
                             if (currentlyFavoritedFilm) {
                               await userRef.update({
                                 "favoritedFilms":
-                                    FieldValue.arrayRemove([post.filmTitle])
+                                FieldValue.arrayRemove([post.filmTitle])
                               });
                             } else {
                               await userRef.update({
                                 "favoritedFilms":
-                                    FieldValue.arrayUnion([post.filmTitle])
+                                FieldValue.arrayUnion([post.filmTitle])
                               });
                             }
 
@@ -420,7 +430,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     ),
                     SizedBox(
                       height:
-                          60, // Adjust this value to move the widget down more or less
+                      60, // Adjust this value to move the widget down more or less
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -482,7 +492,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                         SizedBox(width: 5),
                         Expanded(
                           child: Text(
-                            _postAuthorUsername,
+                            '@alexa_r posted',
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               color: Colors.white,
@@ -550,107 +560,87 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     ),
                     SizedBox(
                       height:
-                          150, // move up and down (the review info that's being displayed)
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 60, right: 60),
-                        child: SingleChildScrollView(
-                            child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Title: ${post.filmTitle}',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                      150, // move up and down (the review info that's being displayed)
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Title: ${post.filmTitle}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                              ],
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                      child: Text(
-                                    'Thoughts: ${post.body}',
-                                    overflow: TextOverflow.clip,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  )),
-                                ]),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Phone Level: ${post.phoneLevel}',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Thoughts ${post.body}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Watch Date:  ${post.watchMonth} / ${post.watchDay} / ${post.watchYear}',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Phone Level: ${post.phoneLevel}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Tags: TODO',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Watch Date:  ${post.watchMonth} / ${post.watchDay} / ${post.watchYear}',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                              ],
-                            ),
-                          ],
-                        )),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Tags: TODO',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 )));
       }
       postViewWidgets.add(postViewWidget);
-    }
-
-    if(postViewWidgets.isEmpty){
-      print("taggg");
-      postViewWidgets.add(
-        Padding(
-          padding: EdgeInsets.only(
-            top: 300
-          ),
-          child:
-          Center(
-              child: Text("Follow someone to see their posts here!")
-          )
-      ));
     }
 
     setState(() {
@@ -666,21 +656,14 @@ class _PostsViewPageState extends State<PostsViewPage> {
         appBar: AppBar(
           title: Text(""),
           leading: IconButton(
-            onPressed: () {
-              //Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          PostsOverviewPage(postRefs: widget.postRefs)));
-
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Color(0xFFAF3037),
-              size: 30,
-            ),
-          ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Color(0xFFAF3037),
+                size: 30,
+              )),
           // title: Text("Posts",
           //     style: TextStyle(
           //         color: Color(0xFFAF3037),
@@ -697,6 +680,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
         bottomNavigationBar: navBar(),
         body: SingleChildScrollView(
           child: Column(
+
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
@@ -705,6 +689,26 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     0.0000000015, // move everything down by x percent
               ),
               SizedBox(height: 8),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orangeAccent),
+                onPressed: () async {
+                  print("todo");
+                  //await PostMethods().sortPostRefsByMostStars(widget.postRefs);
+                  _buildPostViewWidgets();
+                },
+                child: Text('Sort by stars'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orangeAccent),
+                onPressed: () async {
+                  // await PostMethods().sortPostRefsByMostRecent(widget.postRefs);
+                  _buildPostViewWidgets();
+                },
+                child: Text('Sort by date'),
+              ),
+
               Padding(
                 padding: EdgeInsets.only(bottom: 30, left: 20, right: 20),
                 child: Column(children: postViewWidgets),
