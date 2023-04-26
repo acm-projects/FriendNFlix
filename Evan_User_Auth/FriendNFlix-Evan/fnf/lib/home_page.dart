@@ -9,6 +9,9 @@ import 'GetFavoriteShows.dart';
 import 'fnf/Calendar.dart';
 import 'fnf/Classes/Post.dart';
 import 'fnf/CreatePost1.dart';
+import 'fnf/DatabaseServices.dart';
+import 'fnf/Follower.dart';
+import 'fnf/Following.dart';
 import 'fnf/SearchPage.dart';
 import 'fnf/test_firestore_page.dart';
 
@@ -139,7 +142,7 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               style:
-              ElevatedButton.styleFrom(backgroundColor: Colors.lightGreenAccent),
+              ElevatedButton.styleFrom(backgroundColor: Colors.purple),
               onPressed: () async {
                 // get posts to pass to PostsOverviewPage to display
                 List postRefs = await PostMethods().getCurrentUsersPostRefs();
@@ -151,6 +154,36 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: Text('Get favorite shows'),
+            ),
+            ElevatedButton(
+              style:
+              ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
+              onPressed: () async {
+                // get posts to pass to PostsOverviewPage to display
+                var userRef = await DatabaseService().getUserWithID(users!.email!);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Followers(userID: users!.email, userRef: userRef,)),
+                );
+              },
+              child: Text('Followers Page'),
+            ),
+            ElevatedButton(
+              style:
+              ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
+              onPressed: () async {
+                // get posts to pass to PostsOverviewPage to display
+                var userRef = await DatabaseService().getUserWithID(users!.email!);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Following(userID: users!.email, userRef: userRef,)),
+                );
+              },
+              child: Text('Following Page'),
             ),
           ],
         ),
