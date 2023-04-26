@@ -12,6 +12,7 @@ import 'fnf/CreatePost1.dart';
 import 'fnf/DatabaseServices.dart';
 import 'fnf/Follower.dart';
 import 'fnf/Following.dart';
+import 'fnf/Profile.dart';
 import 'fnf/SearchPage.dart';
 import 'fnf/test_firestore_page.dart';
 
@@ -150,7 +151,7 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => GetFavoriteShowsPage()),
+                      builder: (context) => GetFavoriteShowsPage(userId: users!.email!)),
                 );
               },
               child: Text('Get favorite shows'),
@@ -172,7 +173,7 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               style:
-              ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
+              ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
               onPressed: () async {
                 // get posts to pass to PostsOverviewPage to display
                 var userRef = await DatabaseService().getUserWithID(users!.email!);
@@ -184,6 +185,20 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: Text('Following Page'),
+            ),
+            ElevatedButton(
+              style:
+              ElevatedButton.styleFrom(backgroundColor: Colors.indigo),
+              onPressed: () async {
+                // get posts to pass to PostsOverviewPage to display
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Profile(userID: users!.email!)),
+                );
+              },
+              child: Text('Profile Page'),
             ),
           ],
         ),

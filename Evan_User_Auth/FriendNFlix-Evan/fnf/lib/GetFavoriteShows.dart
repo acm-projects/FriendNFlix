@@ -7,7 +7,8 @@ import 'package:fnf/fnf/PostMethods.dart';
 import 'fnf/Classes/Post.dart';
 
 class GetFavoriteShowsPage extends StatefulWidget {
-  const GetFavoriteShowsPage({Key? key}) : super(key: key);
+  String userId;
+  GetFavoriteShowsPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<GetFavoriteShowsPage> createState() => _GetFavoriteShowsPageState();
@@ -30,7 +31,7 @@ class _GetFavoriteShowsPageState extends State<GetFavoriteShowsPage> {
   }
 
   buildFavoriteShowWidgets() async {
-    List<Post> posts = await PostMethods().getCurrentUsersPosts();
+    List<Post> posts = await PostMethods().getUsersPost(widget.userId);
     PostMethods().sortPostsByMostStars(posts); // sorts post with highest stars being at the front
     List<String> highlyRatedFilms = [];
 
@@ -81,7 +82,7 @@ class _GetFavoriteShowsPageState extends State<GetFavoriteShowsPage> {
       var movie = movieQuerySnapshot.docs[0];
 
      Widget filmWidget = Image.network(movie.data()["posterLink"]);
-     favoriteShowsWidgets.add(filmWidget);
+     // favoriteShowsWidgets.add(filmWidget);
     }
   }
 
