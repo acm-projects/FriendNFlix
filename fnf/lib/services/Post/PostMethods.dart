@@ -98,6 +98,25 @@ class PostMethods {
     return postRefs;
   }
 
+  void sortPostsByMostStars(List<Post> posts){
+    for(int i = 0; i < posts.length; i++){
+      int indexOfPostWithMostStars = i;
+      int currentHighestStarAmount = posts[i].starRating;
+
+      for(int j = i; j < posts.length; j ++){
+
+        if(posts[j].starRating > currentHighestStarAmount){
+          indexOfPostWithMostStars = j;
+          currentHighestStarAmount = posts[j].starRating;
+        }
+
+      }
+      Post temp = posts[i];
+      posts[i] = posts[indexOfPostWithMostStars];
+      posts[indexOfPostWithMostStars] = temp;
+    }
+  }
+
   // get user's posts given the user identifier
   getUsersPost(String? userIdentifier) async {
     if (userIdentifier == null) return null;

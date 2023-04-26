@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fnf/profile/topWatchedPage.dart';
 import 'package:fnf/services/database.dart';
 
+import '../services/Post/Post.dart';
 import '../services/Post/PostMethods.dart';
 import '../services/navBar.dart' as navBar;
 import 'PostOverview.dart';
@@ -20,6 +21,7 @@ class otherProfile extends StatefulWidget {
 
 class _otherProfileState extends State<otherProfile> {
   final loggedInUser = FirebaseAuth.instance.currentUser;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Widget profileWidget = Container();
   dynamic user = null;
@@ -27,7 +29,7 @@ class _otherProfileState extends State<otherProfile> {
   int followers = 0;
   int following = 0;
   int postCount = 0;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  List<Widget> favoriteShowWidgets = [];
 
   setUserWithID(String userID) async {
     user = await DatabaseService().getUserWithID(widget.userID);
@@ -66,17 +68,6 @@ class _otherProfileState extends State<otherProfile> {
   @override
   void initState() {
     setUp();
-    // print(widget.userID);
-    //
-    // getUsername(widget.userID);
-    // setUserWithID(widget.userID);
-    // getFollowers(widget.userID);
-    // getFollowing(widget.userID);
-    //
-    // getPostCount(widget.userID);
-    // buildProfileWidget();
-
-    //Follow(widget.userID);
     super.initState();
   }
 
@@ -85,12 +76,94 @@ class _otherProfileState extends State<otherProfile> {
     await setUserWithID(widget.userID);
     await getFollowers(widget.userID);
     await getFollowing(widget.userID);
-
     await getPostCount(widget.userID);
+    await buildFavoriteShowWidgets();
     buildProfileWidget();
+
+    setState(() {
+
+    });
   }
+
+  buildFavoriteShowWidgets() async {
+    favoriteShowWidgets = [];
+    List<Post> posts = await PostMethods().getUsersPost(widget.userID);
+    PostMethods().sortPostsByMostStars(posts); // sorts post with highest stars being at the front
+    List<String> highlyRatedFilms = [];
+
+    Map<String, double> filmAverageStarRating = {};
+    Map<String, int> filmAmountOfPosts = {};
+    for(Post post in posts){
+      int? amountOfPosts = filmAmountOfPosts[post.filmTitle];
+      if(amountOfPosts == null) amountOfPosts = 0;
+
+      amountOfPosts += 1;
+      filmAmountOfPosts[post.filmTitle] = amountOfPosts;
+
+      double? score = filmAverageStarRating[post.filmTitle];
+      if(score == null) score = 0;
+
+      score += post.starRating.toDouble();
+
+      filmAverageStarRating[post.filmTitle] = score;
+    }
+
+    for(var entry in filmAverageStarRating.entries){
+      double starValue = entry.value;
+      int? denominator = filmAmountOfPosts[entry.key];
+      if(denominator == null) denominator = 1;
+
+      filmAverageStarRating[entry.key] = starValue / denominator;
+
+      starValue /= denominator;
+      if(starValue >= 4)
+        highlyRatedFilms.add(entry.key);
+    }
+
+    // for(Post post in posts){
+    //   if(post.starRating < 4) break;
+    //   if(highlyRatedFilms.contains(post.filmTitle)) continue;
+    //   else highlyRatedFilms.add(post.filmTitle);
+    // }
+
+    print("printing highly rated films");
+    print(highlyRatedFilms);
+    for(String film in highlyRatedFilms){
+      var movieQuerySnapshot = await _db.collection("movies").where(
+          "title", isEqualTo: film
+      ).get();
+
+      if(movieQuerySnapshot.docs == null) continue;
+
+      var movie = movieQuerySnapshot.docs[0];
+      print("movie!!!");
+      print(movie);
+      print("data!!!");
+      print(movie.data());
+
+      Widget filmWidget =
+      Padding(
+          padding: EdgeInsets.only(
+              left: 20,
+              right: 20
+          ),
+          child: Container(
+              width: 100,
+              height: 100,
+
+              child: Image.network(movie.data()["posterLink"], fit: BoxFit.cover)
+          )
+      );
+      favoriteShowWidgets.add(filmWidget);
+      print("pay attention");
+      print('added widget for ${movie.data()["title"]}');
+    }
+    setState(() {
+
+    });
+  }
+
   buildProfileWidget() async {
-    print("pay attention to me!");
     print(user);
 
 
@@ -116,14 +189,17 @@ class _otherProfileState extends State<otherProfile> {
 
     Widget buttonToDisplay = Container();
   if (user.id == loggedInUser!.email) {
-    buttonToDisplay = SizedBox();
+    buttonToDisplay = SizedBox(
+      width:110,
+      height: 35
+    );
   }
   else if (!userFollowersIds.contains(loggedInUser!.email)) {
     print("making follow button");
     // make button follow button
     buttonToDisplay = ElevatedButton(
         style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.lightGreenAccent),
+            backgroundColor: Colors.redAccent),
         onPressed: () async {
           print("tag");
           await userRef.update({
@@ -141,6 +217,7 @@ class _otherProfileState extends State<otherProfile> {
 
           print("second tag");
 
+          followers += 1;
           buildProfileWidget();
           setState(() {});
         },
@@ -157,7 +234,7 @@ class _otherProfileState extends State<otherProfile> {
     print("making unfollow button");
     buttonToDisplay = ElevatedButton(
         style:
-        ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+        ElevatedButton.styleFrom(backgroundColor: Colors.grey),
         onPressed: () async {
           await userRef.update({
             "followers": FieldValue.arrayRemove([loggedInUser!.email])
@@ -173,6 +250,7 @@ class _otherProfileState extends State<otherProfile> {
           // do the opposite for unfollow button
 
           buildProfileWidget();
+          followers -= 1;
           setState(() {});
         },
         child: SizedBox(
@@ -191,7 +269,7 @@ class _otherProfileState extends State<otherProfile> {
         body: SingleChildScrollView(
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
                   height: 80,
@@ -316,7 +394,8 @@ class _otherProfileState extends State<otherProfile> {
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 20,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold
+                          ),
                     ),
                   ),
                   //Spacer(),
@@ -455,25 +534,17 @@ class _otherProfileState extends State<otherProfile> {
 
                 Row(children: const [Text(' ')]),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      height: 90,
-                      width: 90,
-                      color: const Color(0xFFEAE2B7).withOpacity(0.4),
-                    ),
-                    Container(
-                      height: 90,
-                      width: 90,
-                      color: const Color(0xFFEAE2B7).withOpacity(0.4),
-                    ),
-                    Container(
-                      height: 90,
-                      width: 90,
-                      color: const Color(0xFFEAE2B7).withOpacity(0.4),
-                    ),
-                  ],
+                SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: 10,
+                          right: 10
+                      ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: favoriteShowWidgets),
+                    )
                 ),
 
                 Row(children: const [Text(' ')]),

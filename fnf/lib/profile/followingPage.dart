@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fnf/profile/profile.dart';
 import 'package:fnf/services/database.dart';
@@ -18,11 +20,18 @@ class Following extends StatefulWidget {
 }
 
 class _FollowingState extends State<Following> {
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  final loggedInUser = FirebaseAuth.instance.currentUser;
+
   int numFollowing = 0;
   String? username;
   List<String> following = [];
   List<String> usernames = [];
-  List<Widget> profileOverviewWidget = [];
+
+  Widget profileOverviewWidgets = Container();
+  List followingUserRefs = [];
+  List followingUserSnaps = [];
+  List numPostsForEveryUser = [];
   setUserWithID() async {
     for(dynamic rf in widget.userRef.data()["following"])
     {
@@ -39,16 +48,140 @@ class _FollowingState extends State<Following> {
     setState(() => username = username);
   }
 
-  buildProfileWidgets()
-  {
-    profileOverviewWidget = [];
-    for(String usrnmes in following)
-    {
-      print(usrnmes);
-      profileOverviewWidget.add(CircleBlock(usrnmes));
+  buildProfileWidgets() async {
+    followingUserRefs = [];
+    followingUserSnaps = [];
+    numPostsForEveryUser = [];
+
+    for (String followedId in following) {
+      print("should be an id:");
+      print(followedId);
+      var userRef = db.collection("users").doc(followedId);
+      var userSnapshot = await userRef.get();
+      print("printing data");
+      print(userSnapshot.data());
+      var followerData = userSnapshot.data();
+      var postsQuery = await userRef.collection("posts").get();
+      int numPosts = 0;
+      if (postsQuery != null) {
+        numPosts = postsQuery.docs.length;
+      }
+
+      print("should be a ref");
+      followingUserRefs.add(userRef);
+      print(userRef);
+      print("should be a SNAPSHOT");
+      followingUserSnaps.add(userSnapshot);
+      print(userSnapshot);
+      numPostsForEveryUser.add(numPosts);
     }
-    setState(() {
-    });
+    profileOverviewWidgets = ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: numFollowing,
+        itemBuilder: (context, index) {
+          String followedId = following[index];
+          var userRef = followingUserRefs[index];
+          var userSnap = followingUserSnaps[index];
+          var userData = userSnap.data();
+
+          List<dynamic>? userFollowers = userData["followers"];
+
+          // top
+
+          if (userFollowers == null) userFollowers = [];
+          List<String> userFollowersIds = [];
+
+          int numPosts = numPostsForEveryUser[index];
+
+          for (var follower in userFollowers) {
+            userFollowersIds.add(follower);
+          }
+
+          int numFollowers = userFollowersIds.length;
+
+          print("printing followers");
+          print(userFollowersIds);
+          // if logged in user is NOT following the searched user
+          Widget buttonToDisplay; // either a follow or unfollow button
+          if (userSnap.id == loggedInUser!.email) {
+            buttonToDisplay = SizedBox();
+          } else {
+            // make button unfollow button
+            print("making unfollow button");
+            buttonToDisplay = ElevatedButton(
+                style:
+                ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                onPressed: () async {
+                  await userRef.update({
+                    "followers": FieldValue.arrayRemove([loggedInUser!.email])
+                  });
+
+                  // add userRef(id) to current user's following
+                  var loggedInUserRef =
+                  db.collection("users").doc(loggedInUser!.email);
+                  await loggedInUserRef.update({
+                    "following": FieldValue.arrayRemove([userRef.id])
+                  });
+
+                  // do the opposite for unfollow button
+
+                  following.removeAt(index);
+                  numFollowing -= 1;
+
+                  await buildProfileWidgets();
+                },
+                child: SizedBox(
+                    width: 75,
+                    height: 35,
+                    child: Center(
+                        child: Text(
+                          "Unfollow",
+                          style: TextStyle(fontSize: 18),
+                        ))));
+          }
+
+          return ListTile(
+            title: Padding(
+                padding: EdgeInsets.only(
+                  bottom: 5
+                ),
+                child: Row(
+                  children: [
+                    // imageWidget
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // show title that post is about
+
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                    child: Text(
+                                      userData["username"],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                      overflow: TextOverflow.ellipsis,
+                                    ))
+                              ]),
+                          // button to click on to go to post view
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                    padding: EdgeInsets.only(right: 2),
+                                    child: Text('${numFollowers} followers')),
+                                Text('${numPosts} posts')
+                              ])
+                        ]),
+                  ],
+                )),
+            trailing: buttonToDisplay,
+          );
+        });
+    setState(() {});
   }
 
   setup() async
@@ -249,13 +382,9 @@ class _FollowingState extends State<Following> {
                     ],
                   ),
 
-                  SizedBox(
-                    height: 15,
-                  ),
-                  SingleChildScrollView(
-                    child: Column(
-                        children: profileOverviewWidget),
-                  ),
+
+                  Column(
+                        children: [profileOverviewWidgets]),
                 ]
             )
         )
