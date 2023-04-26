@@ -213,7 +213,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        SizedBox(width: 2),
+                        SizedBox(width: 10),
                         CircleAvatar(
                           minRadius: 25,
                           backgroundColor: Color(0xFFAF3037),
@@ -299,6 +299,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        SizedBox(width: 20),
                         IconButton(
                           onPressed: () async {
                             // if the likes are being updated (because the user might've)
@@ -484,15 +485,24 @@ class _PostsViewPageState extends State<PostsViewPage> {
                   children: [
                     Row(
                       children: [
-                        Image.asset(
-                          'assets/images/sampleProfile.png',
-                          width: 75,
-                          height: 75,
+                        SizedBox(width: 20),
+                        CircleAvatar(
+                          minRadius: 23,
+                          backgroundColor: Color(0xFFAF3037),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 20.0,
+                            child: const Icon(
+                              Icons.person,
+                              size: 40,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
                         SizedBox(width: 5),
                         Expanded(
                           child: Text(
-                            '@alexa_r posted',
+                            "@" + _postAuthorUsername,
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               color: Colors.white,
@@ -508,7 +518,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     SizedBox(height: 2),
                     Container(width: 275, height: 275, child: imageWidget),
                     Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.centerLeft,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black),
@@ -518,7 +528,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                             _buildPostViewWidgets();
                           },
                           child: Text(
-                            'Show less details',
+                            '                      Show less details',
                             style: TextStyle(
                               fontFamily: 'Montserrat',
                               color: Colors.white,

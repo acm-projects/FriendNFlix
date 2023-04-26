@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fnf/profile/topWatchedPage.dart';
@@ -18,12 +19,16 @@ class otherProfile extends StatefulWidget {
 }
 
 class _otherProfileState extends State<otherProfile> {
+  final loggedInUser = FirebaseAuth.instance.currentUser;
+
   Widget profileWidget = Container();
   dynamic user = null;
   String? username;
   int followers = 0;
   int following = 0;
   int postCount = 0;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
   setUserWithID(String userID) async {
     user = await DatabaseService().getUserWithID(widget.userID);
     setState(() => user = user);
@@ -85,27 +90,103 @@ class _otherProfileState extends State<otherProfile> {
     buildProfileWidget();
   }
   buildProfileWidget() async {
+    print("pay attention to me!");
+    print(user);
+
+
+    var userRef = _db.collection("users").doc(widget.userID);
+
+    user = await userRef.get();
+    var userData = user.data();
+    print("printing data");
+    print(userData);
+    List<dynamic>? userFollowers = userData["followers"];
+
+    // top
+
+    if (userFollowers == null) userFollowers = [];
+    List<String> userFollowersIds = [];
+
+
+    for (var follower in userFollowers) {
+      userFollowersIds.add(follower);
+    }
+
+
+
+    Widget buttonToDisplay = Container();
+  if (user.id == loggedInUser!.email) {
+    buttonToDisplay = SizedBox();
+  }
+  else if (!userFollowersIds.contains(loggedInUser!.email)) {
+    print("making follow button");
+    // make button follow button
+    buttonToDisplay = ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.lightGreenAccent),
+        onPressed: () async {
+          print("tag");
+          await userRef.update({
+            "followers": FieldValue.arrayUnion([loggedInUser!.email])
+          });
+
+          // add userRef(id) to current user's following
+          var loggedInUserRef =
+          _db.collection("users").doc(loggedInUser!.email);
+          await loggedInUserRef.update({
+            "following": FieldValue.arrayUnion([userRef.id])
+          });
+
+          // do the opposite for unfollow button
+
+          print("second tag");
+
+          buildProfileWidget();
+          setState(() {});
+        },
+        child: SizedBox(
+            width: 75,
+            height: 35,
+            child: Center(
+                child: Text(
+                  "Follow",
+                  style: TextStyle(fontSize: 18),
+                ))));
+  } else {
+    // make button unfollow button
+    print("making unfollow button");
+    buttonToDisplay = ElevatedButton(
+        style:
+        ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+        onPressed: () async {
+          await userRef.update({
+            "followers": FieldValue.arrayRemove([loggedInUser!.email])
+          });
+
+          // add userRef(id) to current user's following
+          var loggedInUserRef =
+          _db.collection("users").doc(loggedInUser!.email);
+          await loggedInUserRef.update({
+            "following": FieldValue.arrayRemove([userRef.id])
+          });
+
+          // do the opposite for unfollow button
+
+          buildProfileWidget();
+          setState(() {});
+        },
+        child: SizedBox(
+            width: 75,
+            height: 35,
+            child: Center(
+                child: Text(
+                  "Unfollow",
+                  style: TextStyle(fontSize: 18),
+                ))));
+  }
+
 
     profileWidget = Scaffold(
-        floatingActionButton: FloatingActionButton.large(
-          elevation: 0,
-          backgroundColor: Color(0xFFAF3037),
-          //shape: RoundedRectangleBorder(
-              //borderRadius: BorderRadius.all(Radius.circular(15.0))),
-          child: const Text(
-            "Follow",
-            style: TextStyle(
-                color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
-          ),
-          onPressed: () {
-            // call database to do follow method
-            // check if database returns true, then push back to this page to reload numbers
-
-
-
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         bottomNavigationBar: navBar.navBar(),
         body: SingleChildScrollView(
           child: Column(
@@ -124,6 +205,31 @@ class _otherProfileState extends State<otherProfile> {
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
+                      ElevatedButton(
+                        //shape: RoundedRectangleBorder(
+                        //borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                        style:
+                        ElevatedButton.styleFrom(
+
+                          shadowColor: Colors.white,
+                          backgroundColor: Colors.white.withOpacity(0),
+                          elevation: 0,
+                        ),
+                        child: SizedBox(
+                          width:75,
+                            height: 35,
+                            child: Center(
+                          child: Text(
+                          "Follow",
+                          style: TextStyle(
+                              color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
+                        ))),
+                        onPressed: () {
+                          // call database to do follow method
+                          // check if database returns true, then push back to this page to reload numbers
+
+                        },
+                      ),
                       CircleAvatar(
                         minRadius: 70,
                         backgroundColor: Color(0xFFAF3037),
@@ -152,7 +258,27 @@ class _otherProfileState extends State<otherProfile> {
                           ),
                         ),
                       ),
-                    ]),
+                      buttonToDisplay,
+                      // ElevatedButton(
+                      //     //shape: RoundedRectangleBorder(
+                      //     //borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                      //   style:
+                      //       ElevatedButton.styleFrom(
+                      //         backgroundColor: Color(0xFFAF3037),
+                      //       ),
+                      //     child: const Text(
+                      //       "Follow",
+                      //       style: TextStyle(
+                      //           color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
+                      //     ),
+                      //     onPressed: () {
+                      //       // call database to do follow method
+                      //       // check if database returns true, then push back to this page to reload numbers
+                      //
+                      //     },
+                      //   ),
+                    ],
+                ),
 
                 Container(
                   child: Center(
@@ -387,7 +513,7 @@ class _otherProfileState extends State<otherProfile> {
 
                 Row(children: const [Text(' ')]),
 
-                Container(
+                /*Container(
                   child: const Align(
                     alignment: Alignment(-0.75, 0.0),
                     child: Text(
@@ -428,7 +554,7 @@ class _otherProfileState extends State<otherProfile> {
                     ),
                   ],
                 ),
-                Row(children: const [Text(' ')]),
+                Row(children: const [Text(' ')]), */
               ]),
         ));
     setState(() {});
