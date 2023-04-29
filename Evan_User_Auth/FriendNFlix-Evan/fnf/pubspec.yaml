@@ -44,6 +44,7 @@ dependencies:
   table_calendar: ^3.0.9
   path_provider: ^2.0.14
   csv: ^5.0.1
+  google_fonts: ^4.0.4
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
 
@@ -71,8 +72,13 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - files/imdb_top_1000.csv
+    - files/
+    - assets/
     - assets/images/
+    - assets/avatars/
+    - assets/avatars/group1/
+    - assets/avatars/group2/
+    - assets/avatars/group3/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

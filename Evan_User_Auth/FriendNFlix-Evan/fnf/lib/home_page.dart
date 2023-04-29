@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fnf/fnf/AvatarSelection.dart';
 import 'package:fnf/fnf/PostMethods.dart';
 import 'package:fnf/fnf/PostsOverview.dart';
 import 'package:fnf/fnf/WantToWatch.dart';
@@ -200,6 +201,20 @@ class HomePage extends StatelessWidget {
               },
               child: Text('Profile Page'),
             ),
+            ElevatedButton(
+              style:
+              ElevatedButton.styleFrom(backgroundColor: Colors.limeAccent),
+              onPressed: () async {
+                // get posts to pass to PostsOverviewPage to display
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AvatarSelectionPage()),
+                );
+              },
+              child: Text('Select An Avatar'),
+            )
           ],
         ),
       ),
