@@ -42,7 +42,6 @@ dependencies:
   googleapis_auth: ^1.4.0
   url_launcher: ^6.1.10
   table_calendar: ^3.0.9
-  google_fonts: ^4.0.4
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2
@@ -72,10 +71,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/avatars/
-    - assets/avatars/group1/
-    - assets/avatars/group2/
-    - assets/avatars/group3/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

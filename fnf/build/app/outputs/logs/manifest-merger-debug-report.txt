@@ -71,7 +71,6 @@ MERGED from [:firebase_auth] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\bui
 MERGED from [:cloud_firestore] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\cloud_firestore\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-17:12
 MERGED from [:firebase_core] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-17:12
 MERGED from [:url_launcher_android] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-16:12
-MERGED from [:path_provider_android] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\EMW81\.gradle\caches\transforms-3\6de2e4853250ac31aa6565f6c3a0d063\transformed\multidex-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [com.google.firebase:firebase-analytics-ktx:21.2.0] C:\Users\EMW81\.gradle\caches\transforms-3\6b2c42d1293700361c41e3d371190429\transformed\jetified-firebase-analytics-ktx-21.2.0\AndroidManifest.xml:2:1-17:12
 MERGED from [com.google.firebase:firebase-common-ktx:20.3.0] C:\Users\EMW81\.gradle\caches\transforms-3\8bb14f8df67f45a9a0b1d0b04b1ca640\transformed\jetified-firebase-common-ktx-20.3.0\AndroidManifest.xml:2:1-20:12
@@ -153,8 +152,6 @@ MERGED from [:firebase_core] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\bui
 MERGED from [:firebase_core] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\firebase_core\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:url_launcher_android] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:url_launcher_android] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\url_launcher_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
-MERGED from [:path_provider_android] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
-MERGED from [:path_provider_android] C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\path_provider_android\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\EMW81\.gradle\caches\transforms-3\6de2e4853250ac31aa6565f6c3a0d063\transformed\multidex-2.0.0\AndroidManifest.xml:20:5-43
 MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\EMW81\.gradle\caches\transforms-3\6de2e4853250ac31aa6565f6c3a0d063\transformed\multidex-2.0.0\AndroidManifest.xml:20:5-43
 MERGED from [com.google.firebase:firebase-analytics-ktx:21.2.0] C:\Users\EMW81\.gradle\caches\transforms-3\6b2c42d1293700361c41e3d371190429\transformed\jetified-firebase-analytics-ktx-21.2.0\AndroidManifest.xml:5:5-44

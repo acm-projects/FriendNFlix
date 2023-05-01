@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69ec89bd-9a6b-4a66-916a-2ce81a1d5198" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/fnf/lib/src/AvatarSelection.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fnf/lib/profile/otherProfile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/profile/otherProfile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fnf/lib/profile/profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/profile/profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fnf/lib/profile/Feed.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/profile/Feed.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fnf/lib/services/Post/PostsView.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/services/Post/PostsView.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fnf/lib/services/navBar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/services/navBar.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fnf/lib/src/SearchPage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/src/SearchPage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fnf/lib/src/login.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/src/login.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fnf/lib/src/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/src/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fnf/lib/src/register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/lib/src/register.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fnf/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fnf/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fnf/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/fnf/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fnf/lib/src/viewPost.dart" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,11 +64,11 @@
       <recent name="C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\android\app\src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\assets" />
       <recent name="C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\lib\profile" />
       <recent name="C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\lib\src" />
       <recent name="C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\lib" />
       <recent name="C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\lib\services" />
+      <recent name="C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\assets\images" />
     </key>
   </component>
   <component name="RunManager" selected="Flutter.main.dart">
