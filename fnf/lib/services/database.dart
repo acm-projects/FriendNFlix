@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fnf/services/Calendar/CalendarMethods.dart';
 import 'package:fnf/services/user_model.dart';
 import 'package:googleapis/analytics/v3.dart';
 
@@ -34,9 +35,21 @@ class DatabaseService {
   }
 
   Future<int> getNumFollowersFromID(String id) async {
+    var userRef = db.collection("users").doc(id);
+    var userSnap = await userRef.get();
+    var userData = userSnap.data();
+    List? followers = userData!["followers"];
+    if(followers == null) return 0;
+    return followers.length;
+
     QuerySnapshot snapshot = await usersCollection.get();
     for (QueryDocumentSnapshot doc in snapshot.docs) {
-      if (doc.id == id && doc.get("followers") != null) {
+
+      var userRef = db.collection("users").doc(id);
+      var userSnap = await userRef.get();
+      var userData = userSnap.data();
+      if (doc.id == id && userData?["followers"] != null) {
+
         return doc
             .get("followers")
             .length;
@@ -46,9 +59,20 @@ class DatabaseService {
   }
 
   Future<int> getNumFollowingFromID(String id) async {
+    var userRef = db.collection("users").doc(id);
+    var userSnap = await userRef.get();
+    var userData = userSnap.data();
+    List? following = userData!["following"];
+    if(following == null) return 0;
+    return following.length;
+
     QuerySnapshot snapshot = await usersCollection.get();
     for (QueryDocumentSnapshot doc in snapshot.docs) {
-      if (doc.id == id && doc.get("following") != null) {
+
+      var userRef = db.collection("users").doc(id);
+      var userSnap = await userRef.get();
+      var userData = userSnap.data();
+      if (doc.id == id && userData?["following"] != null) {
         return doc
             .get("following")
             .length;
