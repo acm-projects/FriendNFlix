@@ -47,6 +47,7 @@ class _FeedPageState extends State<FeedPage> {
     super.initState();
   }
 
+
   setUp() async {
     postRefs = await PostMethods().getCurrentUsersPostRefs();
 
@@ -105,6 +106,7 @@ class _FeedPageState extends State<FeedPage> {
       print("username:");
       print(username);
       postAuthors[postId] = username;
+
 
 
       String title = post.filmTitle;
@@ -266,19 +268,7 @@ class _FeedPageState extends State<FeedPage> {
                           SizedBox(width: 10),
                           /*Image.asset("assets/images/sampleProfile.png",
                             width: 75, height: 75), */
-                          CircleAvatar(
-                            minRadius: 23,
-                            backgroundColor: Color(0xFFAF3037),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 20.0,
-                              child: const Icon(
-                                Icons.person,
-                                size: 40,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
+
                           SizedBox(width: 5),
                           Expanded(
                             child: Text(

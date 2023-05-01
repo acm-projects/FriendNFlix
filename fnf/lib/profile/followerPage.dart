@@ -14,7 +14,7 @@ class Followers extends StatefulWidget {
   Followers({Key? key, required this.userRef, required this.userID})
       : super(key: key);
   dynamic userRef;
-  String? userID;
+  String userID;
   @override
   State<Followers> createState() => _FollowersState();
 }
@@ -22,8 +22,10 @@ class Followers extends StatefulWidget {
 class _FollowersState extends State<Followers> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final loggedInUser = FirebaseAuth.instance.currentUser;
+  dynamic user = null;
 
   String? username;
+  String mainAvatarPath = '';
   int numFollowers = 0;
   List<String> followers = [];
   List<String> usernames = [];
@@ -32,11 +34,18 @@ class _FollowersState extends State<Followers> {
   List followerUserRefs = [];
   List followerUserSnaps = [];
   List numPostsForEveryUser = [];
+
+
+
   setUserWithID() async {
     for (dynamic rf in widget.userRef.data()["followers"]) {
       followers.add(rf.toString());
     }
     usernames = await DatabaseService().getUsernamesFromIds(followers);
+
+
+      user = await DatabaseService().getUserWithID(widget.userID);
+      setState(() => user = user);
   }
 
   getFollowers(String userID) async {
@@ -65,6 +74,7 @@ class _FollowersState extends State<Followers> {
   buildProfileWidgets() async {
     followerUserRefs = [];
     followerUserSnaps = [];
+
     numPostsForEveryUser = [];
 
     for (String follower in followers) {
@@ -91,6 +101,8 @@ class _FollowersState extends State<Followers> {
     }
     profileOverviewWidgets = SingleChildScrollView(
         child: ListView.builder(
+
+
             scrollDirection: Axis.vertical,
             shrinkWrap: true,
             itemCount: numFollowers,
@@ -102,8 +114,14 @@ class _FollowersState extends State<Followers> {
 
               List<dynamic>? userFollowers = userData["followers"];
 
+              var pathDynamic = userData["avatarPath"];
+              String path = '';
+              if(pathDynamic != null) path = pathDynamic.toString();
+              else print("uh oh!");
               // top
 
+              print("path here");
+              print(path);
               if (userFollowers == null) userFollowers = [];
               List<String> userFollowersIds = [];
 
@@ -199,6 +217,30 @@ class _FollowersState extends State<Followers> {
                     child: Row(
                       children: [
                         // imageWidget
+                        Container(
+                            padding: EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Color(0xFFAF3037), width: 2)),
+                            child: IconButton(
+                                padding: EdgeInsets.all(0),
+                                constraints: BoxConstraints(),
+                                iconSize: 40,
+                                onPressed: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(builder: (context) => Profile(userID: widget.userID)),
+                                  // );
+                                },
+                                icon: Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: AssetImage(path), fit: BoxFit.cover)),
+                                ))),
+                        SizedBox(
+                          width: 5
+                        ),
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -236,7 +278,10 @@ class _FollowersState extends State<Followers> {
   }
 
   setup() async {
+    await getFollowers(widget.userID!);
+    await getUsername(widget.userID!);
     await setUserWithID();
+    await setAvatarPath();
     buildProfileWidgets();
   }
 
@@ -247,6 +292,13 @@ class _FollowersState extends State<Followers> {
     setup();
     super.initState();
   }
+
+  setAvatarPath(){
+    var userData = user.data();
+    var pathDynamic = userData["avatarPath"];
+    if(pathDynamic != null) mainAvatarPath = pathDynamic.toString();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -267,34 +319,27 @@ class _FollowersState extends State<Followers> {
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    CircleAvatar(
-                      minRadius: 70,
-                      backgroundColor: Color(0xFFAF3037),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 68.0,
-                        child: ElevatedButton(
-                          child: const Icon(
-                            Icons.person,
-                            size: 100.0,
-                            color: Colors.black,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
-                            padding: EdgeInsets.all(20),
-                            backgroundColor: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Profile(
-                                      userID: widget.userRef!.data()["email"])),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                    Container(
+                        padding: EdgeInsets.all(0.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Color(0xFFAF3037), width: 2)),
+                        child: IconButton(
+                            padding: EdgeInsets.all(3),
+                            constraints: BoxConstraints(),
+                            iconSize: 135,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Profile(userID: widget.userID)),
+                              );
+                            },
+                            icon: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: AssetImage(mainAvatarPath), fit: BoxFit.cover)),
+                            ))),
                   ]),
 
               Container(

@@ -227,7 +227,6 @@ import 'package:flutter/material.dart';
 
 import '../profile/otherProfile.dart';
 import '../services/navBar.dart';
-import 'Classes/Post.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);

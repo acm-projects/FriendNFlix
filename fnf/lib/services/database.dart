@@ -28,6 +28,9 @@ class DatabaseService {
     QuerySnapshot snapshot = await usersCollection.get();
     for (QueryDocumentSnapshot doc in snapshot.docs) {
       if (doc.id == id) {
+        print(id);
+        print(doc);
+        print("mad");
         return doc.get("username");
       }
     }

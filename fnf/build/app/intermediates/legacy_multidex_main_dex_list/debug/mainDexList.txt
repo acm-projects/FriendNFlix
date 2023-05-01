@@ -164,6 +164,8 @@ com/google/android/gms/internal/common/zzx.class
 com/google/android/gms/internal/common/zzy.class
 com/google/android/gms/internal/common/zzz.class
 com/google/android/gms/stats/CodePackage.class
+com/google/android/play/core/integrity/model/IntegrityErrorCode.class
+com/google/android/recaptcha/internal/zzbf.class
 com/google/common/annotations/Beta.class
 com/google/common/annotations/GwtCompatible.class
 com/google/common/annotations/GwtIncompatible.class
@@ -233,6 +235,7 @@ com/google/firebase/annotations/concurrent/Lightweight.class
 com/google/firebase/annotations/concurrent/UiThread.class
 com/google/firebase/auth/ActionCodeResult$ActionDataKey.class
 com/google/firebase/auth/ActionCodeResult$Operation.class
+com/google/firebase/firestore/AggregateQuerySnapshot.class
 com/google/firebase/firestore/DocumentId.class
 com/google/firebase/firestore/Exclude.class
 com/google/firebase/firestore/IgnoreExtraProperties.class

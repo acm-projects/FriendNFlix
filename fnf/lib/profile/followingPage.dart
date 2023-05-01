@@ -14,7 +14,8 @@ class Following extends StatefulWidget {
 
   Following({Key? key, required this.userRef, required this.userID}) : super(key: key);
   dynamic userRef;
-  String? userID;
+  String userID;
+
   @override
   State<Following> createState() => _FollowingState();
 }
@@ -24,10 +25,12 @@ class _FollowingState extends State<Following> {
   final loggedInUser = FirebaseAuth.instance.currentUser;
 
   int numFollowing = 0;
+  String mainAvatarPath = '';
   String? username;
   List<String> following = [];
   List<String> usernames = [];
 
+  var user = null;
   Widget profileOverviewWidgets = Container();
   List followingUserRefs = [];
   List followingUserSnaps = [];
@@ -38,6 +41,9 @@ class _FollowingState extends State<Following> {
       following.add(rf.toString());
     }
     usernames = await DatabaseService().getUsernamesFromIds(following);
+
+    user = await DatabaseService().getUserWithID(widget.userID);
+    setState(() => user = user);
   }
   getFollowing(String userID) async {
     numFollowing = await DatabaseService().getNumFollowingFromID(widget.userID!);
@@ -47,6 +53,14 @@ class _FollowingState extends State<Following> {
     username = await DatabaseService().getUsernameFromID(widget.userID!);
     setState(() => username = username);
   }
+
+
+  setAvatarPath(){
+    var userData = user.data();
+    var pathDynamic = userData["avatarPath"];
+    if(pathDynamic != null) mainAvatarPath = pathDynamic.toString();
+  }
+
 
   buildProfileWidgets() async {
     followingUserRefs = [];
@@ -86,6 +100,9 @@ class _FollowingState extends State<Following> {
           var userData = userSnap.data();
 
           List<dynamic>? userFollowers = userData["followers"];
+          var pathDynamic = userData["avatarPath"];
+          String path = '';
+          if(pathDynamic != null) path = pathDynamic.toString();
 
           // top
 
@@ -149,6 +166,30 @@ class _FollowingState extends State<Following> {
                 child: Row(
                   children: [
                     // imageWidget
+                    Container(
+                        padding: EdgeInsets.all(0.0),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Color(0xFFAF3037), width: 2)),
+                        child: IconButton(
+                            padding: EdgeInsets.all(0),
+                            constraints: BoxConstraints(),
+                            iconSize: 40,
+                            onPressed: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(builder: (context) => Profile(userID: widget.userID)),
+                              // );
+                            },
+                            icon: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: AssetImage(path), fit: BoxFit.cover)),
+                            ))),
+                    SizedBox(
+                        width: 5
+                    ),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -187,6 +228,7 @@ class _FollowingState extends State<Following> {
   setup() async
   {
     await setUserWithID();
+    await setAvatarPath();
     buildProfileWidgets();
   }
   @override
@@ -216,33 +258,27 @@ class _FollowingState extends State<Following> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        CircleAvatar(
-                          minRadius: 70,
-                          backgroundColor: Color(0xFFAF3037),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 68.0,
-                            child: ElevatedButton(
-                              child: const Icon(
-                                Icons.person,
-                                size: 100.0,
-                                color: Colors.black,
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                shape: CircleBorder(),
-                                padding: EdgeInsets.all(20),
-                                backgroundColor: Colors.white,
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Profile(userID: widget.userRef!.data()["email"])),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                        Container(
+                            padding: EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Color(0xFFAF3037), width: 2)),
+                            child: IconButton(
+                                padding: EdgeInsets.all(3),
+                                constraints: BoxConstraints(),
+                                iconSize: 135,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Profile(userID: widget.userID)),
+                                  );
+                                },
+                                icon: Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: AssetImage(mainAvatarPath), fit: BoxFit.cover)),
+                                ))),
                       ]),
 
                   Container(

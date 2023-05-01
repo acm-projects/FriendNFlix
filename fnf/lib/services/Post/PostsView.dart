@@ -592,7 +592,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Thoughts ${post.body}',
+                                'Thoughts: ${post.body}',
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
                                   color: Colors.white,
@@ -699,7 +699,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     0.0000000015, // move everything down by x percent
               ),
               SizedBox(height: 8),
-              ElevatedButton(
+              /*ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orangeAccent),
                 onPressed: () async {
@@ -719,6 +719,8 @@ class _PostsViewPageState extends State<PostsViewPage> {
                 child: Text('Sort by date'),
               ),
 
+
+               */
               Padding(
                 padding: EdgeInsets.only(bottom: 30, left: 20, right: 20),
                 child: Column(children: postViewWidgets),

@@ -4,6 +4,7 @@ import 'package:fnf/src/login.dart';
 import 'package:fnf/services/auth.dart';
 
 import '../profile/Feed.dart';
+import 'AvatarSelection.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -175,7 +176,7 @@ class _RegisterState extends State<Register> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => FeedPage()),
+                                    builder: (context) => AvatarSelectionPage()),
                               );
                             }
                             else {
