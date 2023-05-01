@@ -18,3 +18,4 @@ com.example.fnf.app-merged_res-16 C:\Users\EMW81\Documents\GitHub\FriendNFlix\fn
 com.example.fnf.app-packaged_res-17 C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\cloud_firestore\intermediates\packaged_res\debug
 com.example.fnf.app-packaged_res-18 C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\firebase_auth\intermediates\packaged_res\debug
 com.example.fnf.app-packaged_res-19 C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\firebase_core\intermediates\packaged_res\debug
+com.example.fnf.app-packaged_res-20 C:\Users\EMW81\Documents\GitHub\FriendNFlix\fnf\build\url_launcher_android\intermediates\packaged_res\debug
