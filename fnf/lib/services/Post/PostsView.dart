@@ -26,6 +26,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
   Map<String, bool> likedPosts = {};
   Map<String, bool> dislikedPosts = {};
   Map<String, bool> hasFavoritedFilmMap = {};
+  Map<String, String> avatarPaths = {};
   bool _updatingLikes = false;
   List<Widget> postViewWidgets = [];
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -190,6 +191,43 @@ class _PostsViewPageState extends State<PostsViewPage> {
       if (imageURL != null && imageURL.isNotEmpty)
         imageWidget = Image.network(imageURL, fit: BoxFit.fitHeight);
 
+      String postAuthorId = post.postAuthorId;
+      var userRef = _db.collection("users").doc(postAuthorId);
+      var userSnap = await userRef.get();
+      var userData = userSnap.data();
+      String path = userData!["avatarPath"];
+
+      String tagString = "";
+      for(String tag in post.tags){
+        tagString += tag + ", ";
+      }
+
+      if(tagString.length >= 2){
+        tagString = tagString.substring(0, tagString.length - 2);
+      }
+
+      Widget avatarWidget = Container(
+          padding: EdgeInsets.all(0.0),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Color(0xFFAF3037), width: 2)),
+          child: IconButton(
+              padding: EdgeInsets.all(0),
+              constraints: BoxConstraints(),
+              iconSize: 40,
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Profile(userID: widget.userID)),
+                // );
+              },
+              icon: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: AssetImage(path), fit: BoxFit.cover)),
+              )));
+
       Widget postViewWidget;
       if (postsShowingFront![postId]!) {
         postViewWidget = Container(
@@ -214,19 +252,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     Row(
                       children: [
                         SizedBox(width: 10),
-                        CircleAvatar(
-                          minRadius: 25,
-                          backgroundColor: Color(0xFFAF3037),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 22.0,
-                            child: const Icon(
-                              Icons.person,
-                              size: 40,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                        avatarWidget,
                         SizedBox(width: 5),
                         Expanded(
                           child: Text(
@@ -486,19 +512,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                     Row(
                       children: [
                         SizedBox(width: 20),
-                        CircleAvatar(
-                          minRadius: 23,
-                          backgroundColor: Color(0xFFAF3037),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 20.0,
-                            child: const Icon(
-                              Icons.person,
-                              size: 40,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                        avatarWidget,
                         SizedBox(width: 5),
                         Expanded(
                           child: Text(
@@ -634,7 +648,7 @@ class _PostsViewPageState extends State<PostsViewPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Tags: TODO',
+                                'Tags: ${tagString}',
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
                                   color: Colors.white,

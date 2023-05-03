@@ -36,7 +36,9 @@ class _FollowingState extends State<Following> {
   List followingUserSnaps = [];
   List numPostsForEveryUser = [];
   setUserWithID() async {
-    for(dynamic rf in widget.userRef.data()["following"])
+    dynamic followingDynamics = widget.userRef.data()["following"] ;
+    if(followingDynamics == null)  followingDynamics = [];
+    for(dynamic rf in followingDynamics)
     {
       following.add(rf.toString());
     }

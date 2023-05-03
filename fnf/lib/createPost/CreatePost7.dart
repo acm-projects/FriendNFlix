@@ -7,9 +7,8 @@ import 'package:flutter/rendering.dart';
 
 import 'package:fnf/services/Post/Post.dart';
 import 'package:fnf/services/Post/PostsView.dart';
-import '../profile/profile.dart';
-import 'CreatePost4.dart';
 import 'package:fnf/services/Post/PostMethods.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CreatePost7 extends StatefulWidget {
   final String filmTitle;
@@ -22,13 +21,13 @@ class CreatePost7 extends StatefulWidget {
 
   CreatePost7(
       {Key? key,
-        required this.filmTitle,
-        required this.starRating,
-        required this.postBody,
-        required this.watchDay,
-        required this.phoneLevel,
-        required this.tags,
-        required this.imageURL})
+      required this.filmTitle,
+      required this.starRating,
+      required this.postBody,
+      required this.watchDay,
+      required this.phoneLevel,
+      required this.tags,
+      required this.imageURL})
       : super(key: key);
 
   @override
@@ -37,11 +36,10 @@ class CreatePost7 extends StatefulWidget {
 
 class _CreatePost7State extends State<CreatePost7> {
   final users = FirebaseAuth.instance.currentUser;
-  Widget imageWidget = Image.asset(
-      'assets/images/AlpinistExample.jpg',
-      fit: BoxFit.fitHeight
-  );
+  Widget imageWidget =
+      Image.asset('assets/images/AlpinistExample.jpg', fit: BoxFit.fitHeight);
 
+  String tagString = "";
   void setUpImageWidget() {
     imageWidget = Image.network(widget.imageURL, fit: BoxFit.fitHeight);
     setState(() {});
@@ -76,6 +74,15 @@ class _CreatePost7State extends State<CreatePost7> {
       _starColors[i] = Color(0xFFFAE20D);
     }
 
+    for(String tag in widget.tags){
+      tagString += tag + ", ";
+    }
+
+    if(tagString.length >= 2){
+      tagString = tagString.substring(0, tagString.length - 2);
+    }
+
+
     setUpImageWidget();
   }
 
@@ -87,27 +94,35 @@ class _CreatePost7State extends State<CreatePost7> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xFFFFF7F5),
-        body: Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/create_a_post_background2.png'),
+                    //'assets/images/create_a_post_background.png'
+                    fit: BoxFit.cover)),
+            child: Padding(
+                padding: EdgeInsets.only(left: 15, right: 15),
+                child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0000000015,
+                        height:
+                            MediaQuery.of(context).size.height * 0.0000000015,
                       ),
                       Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 40),
                           child: Text(
                             'Post Overview',
-                            style: TextStyle(
-                              fontFamily: 'Karla',
+                            style: GoogleFonts.montserrat(
                               fontSize: 40,
                               fontWeight: FontWeight.w800,
-                              color: Color(0xFFAF3037),
+                              color: Colors.white,
                               shadows: [
                                 Shadow(
                                   blurRadius: 10,
@@ -119,15 +134,15 @@ class _CreatePost7State extends State<CreatePost7> {
                           ),
                         ),
                       ),
+                      SizedBox(height: 20),
                       Row(
                         children: [
                           Text(
                             'Selected Title:',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                              fontSize: 20,
                               fontWeight: FontWeight.w700,
-                              fontFamily: 'Karla',
                               shadows: [
                                 Shadow(
                                   blurRadius: 4,
@@ -141,10 +156,9 @@ class _CreatePost7State extends State<CreatePost7> {
                           Expanded(
                               child: Text(widget.filmTitle,
                                   overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.black,
+                                  style: GoogleFonts.montserrat(
+                                    color: Colors.white,
                                     fontSize: 18,
-                                    fontFamily: 'Karla',
                                     shadows: [
                                       Shadow(
                                         blurRadius: 4,
@@ -158,26 +172,24 @@ class _CreatePost7State extends State<CreatePost7> {
                         child: Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Container(
-                                width: 225,
-                                height: 225,
-                                child: imageWidget
-                            )),
+                                width: 300, height: 310, child: imageWidget)),
                       ),
+                      SizedBox(height: 10),
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                                 padding: EdgeInsets.only(bottom: 5),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Rating:',
-                                      style: TextStyle(
-                                        color: Colors.black,
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w700,
-                                        fontFamily: 'Karla',
                                         shadows: [
                                           Shadow(
                                             blurRadius: 4,
@@ -188,7 +200,8 @@ class _CreatePost7State extends State<CreatePost7> {
                                       textAlign: TextAlign.left,
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         //color: Color(0xFFFAE20D),
                                         Icon(Icons.star,
@@ -212,10 +225,9 @@ class _CreatePost7State extends State<CreatePost7> {
                                   children: [
                                     Text(
                                       'Thoughts:',
-                                      style: TextStyle(
-                                        color: Colors.black,
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
                                         fontSize: 18,
-                                        fontFamily: 'Karla',
                                         fontWeight: FontWeight.w700,
                                         shadows: [
                                           Shadow(
@@ -227,10 +239,9 @@ class _CreatePost7State extends State<CreatePost7> {
                                       textAlign: TextAlign.left,
                                     ),
                                     Padding(
-                                        padding:
-                                        EdgeInsets.only(left: 10, right: 10, top: 5),
-                                        child:
-                                        Container(
+                                        padding: EdgeInsets.only(
+                                            left: 10, right: 10, top: 5, bottom: 10),
+                                        child: Container(
                                             height: 100,
                                             width: double.infinity,
                                             color: Colors.grey,
@@ -238,22 +249,23 @@ class _CreatePost7State extends State<CreatePost7> {
                                                 child: Padding(
                                                     padding: EdgeInsets.all(7),
                                                     child: Text(widget.postBody,
-                                                        style:
-                                                        TextStyle(fontSize: 18))))
-                                        ))
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                                fontSize:
+                                                                    18, color: Colors.black))))))
                                   ],
                                 )),
                             Padding(
                                 padding: EdgeInsets.only(bottom: 5),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Watch Date:',
-                                      style: TextStyle(
-                                        color: Colors.black,
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
                                         fontSize: 18,
-                                        fontFamily: 'Karla',
                                         fontWeight: FontWeight.w700,
                                         shadows: [
                                           Shadow(
@@ -266,23 +278,26 @@ class _CreatePost7State extends State<CreatePost7> {
                                     ),
                                     SizedBox(
                                         width:
-                                        1), // add some spacing between the text and the curved box
+                                            1), // add some spacing between the text and the curved box
                                     Text(
-                                        widget.watchDay.toString().substring(0, 10),
-                                        style: TextStyle(fontSize: 18))
+                                        widget.watchDay
+                                            .toString()
+                                            .substring(0, 10),
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 18, color: Colors.white))
                                   ],
                                 )),
                             Padding(
                                 padding: EdgeInsets.only(bottom: 5),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       'Phone Level:',
-                                      style: TextStyle(
-                                        color: Colors.black,
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
                                         fontSize: 18,
-                                        fontFamily: 'Karla',
                                         fontWeight: FontWeight.w700,
                                         shadows: [
                                           Shadow(
@@ -295,9 +310,10 @@ class _CreatePost7State extends State<CreatePost7> {
                                     ),
                                     SizedBox(
                                         width:
-                                        1), // add some spacing between the text and the curved box
+                                            1), // add some spacing between the text and the curved box
                                     Text(widget.phoneLevel.toString(),
-                                        style: TextStyle(fontSize: 18))
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 18, color: Colors.white))
                                   ],
                                 )),
                             Padding(
@@ -305,11 +321,10 @@ class _CreatePost7State extends State<CreatePost7> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      'Tags:',
-                                      style: TextStyle(
-                                        color: Colors.black,
+                                      'Tags: ',
+                                      style: GoogleFonts.montserrat(
+                                        color: Colors.white,
                                         fontSize: 18,
-                                        fontFamily: 'Karla',
                                         fontWeight: FontWeight.w700,
                                         shadows: [
                                           Shadow(
@@ -322,16 +337,16 @@ class _CreatePost7State extends State<CreatePost7> {
                                     ),
                                     SizedBox(
                                         width:
-                                        1), // add some spacing between the text and the curved box
-                                    Text("todo")
+                                            1), // add some spacing between the text and the curved box
+                                    Text(tagString, style: GoogleFonts.montserrat(
+                                        fontSize: 18, color: Colors.white))
                                   ],
                                 )),
                             Padding(
-                                padding: EdgeInsets.only(
-                                    top: 5
-                                ),
+                                padding: EdgeInsets.only(top: 5),
                                 child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       IconButton(
                                           onPressed: () {
@@ -339,19 +354,20 @@ class _CreatePost7State extends State<CreatePost7> {
                                           },
                                           icon: Icon(
                                             Icons.arrow_back,
-                                            color: Color(0xFFAF3037),
+                                            color: Colors.white,
                                             size: 30,
                                           )),
                                       ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              backgroundColor: Color(0xFFFAE20D)),
+                                              backgroundColor:
+                                                  Color(0xFFFAE20D)),
                                           onPressed: () async {
                                             // do not make a post if the button has been clicked (because
                                             // that means one is being made)
                                             if (_clickedOnce) return;
 
                                             _clickedOnce =
-                                            true; // stop the button from making multiple posts
+                                                true; // stop the button from making multiple posts
 
                                             // note: all values except the body are hard coded for right now
                                             Post newPost = Post(
@@ -359,7 +375,8 @@ class _CreatePost7State extends State<CreatePost7> {
                                                 filmTitle: widget.filmTitle,
                                                 starRating: widget.starRating,
                                                 watchDay: widget.watchDay.day,
-                                                watchMonth: widget.watchDay.month,
+                                                watchMonth:
+                                                    widget.watchDay.month,
                                                 watchYear: widget.watchDay.year,
                                                 phoneLevel: widget.phoneLevel,
                                                 tags: widget.tags,
@@ -367,7 +384,8 @@ class _CreatePost7State extends State<CreatePost7> {
                                                 likedBy: [],
                                                 dislikedBy: []);
 
-                                            PostMethods postMethods = PostMethods();
+                                            PostMethods postMethods =
+                                                PostMethods();
                                             print("here");
                                             var newPostRef = await postMethods
                                                 .addPostToFirestore(newPost);
@@ -375,8 +393,9 @@ class _CreatePost7State extends State<CreatePost7> {
                                             print("id");
                                             print(newPostRef.id);
 
-
-                                            newPostRef = await PostMethods().getPostRefWithIdentifier(newPostRef.id);
+                                            newPostRef = await PostMethods()
+                                                .getPostRefWithIdentifier(
+                                                    newPostRef.id);
 
                                             print("should be a ref not doc");
                                             print(newPostRef);
@@ -384,15 +403,17 @@ class _CreatePost7State extends State<CreatePost7> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => PostsViewPage(postRefs: [newPostRef])),
+                                                  builder: (context) =>
+                                                      PostsViewPage(postRefs: [
+                                                        newPostRef
+                                                      ])),
                                             );
 
                                             // todo what happens after post is made
                                           },
                                           child: Text('POST'))
-                                    ])
-                            ),
+                                    ])),
                           ]),
-                    ]))));
+                    ])))));
   }
 }

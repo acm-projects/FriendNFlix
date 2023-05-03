@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fnf/services/auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../services/Calendar/Calendar.dart';
 import '../services/Post/CommentsView.dart';
@@ -30,6 +31,7 @@ class _FeedPageState extends State<FeedPage> {
   Map<String, bool> likedPosts = {};
   Map<String, bool> dislikedPosts = {};
   Map<String, bool> hasFavoritedFilmMap = {};
+  Map<String, String> avatarPaths = {};
   bool _updatingLikes = false;
   List<Widget> postViewWidgets = [];
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -61,6 +63,7 @@ class _FeedPageState extends State<FeedPage> {
     List<String> following = [];
     for(dynamic followingDynamic in followingDynamics){
       following.add(followingDynamic.toString());
+      avatarPaths[followingDynamic.toString()] = userData["avatarPath"];
     }
 
     for(String followingId in following){
@@ -197,6 +200,7 @@ class _FeedPageState extends State<FeedPage> {
       for(String s in post.tags){
         tagString += s + ", ";
       }
+
       if(tagString.isNotEmpty)
         tagString = tagString.substring(0, tagString.length - 2);
 
@@ -211,6 +215,31 @@ class _FeedPageState extends State<FeedPage> {
       if (_postAuthorUsername == null || _postAuthorUsername.isEmpty) {
         _postAuthorUsername = "Anonymous";
       }
+      print("this is a post");
+      print(post);
+      String path = avatarPaths[post.postAuthorId]!;
+
+      Widget avatarWidget = Container(
+          padding: EdgeInsets.all(0.0),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Color(0xFFAF3037), width: 2)),
+          child: IconButton(
+              padding: EdgeInsets.all(0),
+              constraints: BoxConstraints(),
+              iconSize: 40,
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Profile(userID: widget.userID)),
+                // );
+              },
+              icon: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: AssetImage(path), fit: BoxFit.cover)),
+              )));
 
       String? imageURL = "";
 
@@ -265,10 +294,11 @@ class _FeedPageState extends State<FeedPage> {
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          SizedBox(width: 10),
+                          SizedBox(width: 20),
                           /*Image.asset("assets/images/sampleProfile.png",
                             width: 75, height: 75), */
 
+                          avatarWidget,
                           SizedBox(width: 5),
                           Expanded(
                             child: Text(
@@ -285,7 +315,7 @@ class _FeedPageState extends State<FeedPage> {
                           SizedBox(width: 10),
                         ],
                       ),
-                      SizedBox(height: 2),
+                      SizedBox(height: 5),
                       Container(width: 250, height: 250, child: imageWidget),
                       Align(
                           alignment: Alignment.centerLeft,
@@ -341,6 +371,7 @@ class _FeedPageState extends State<FeedPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          SizedBox(width: 20),
                           IconButton(
                             onPressed: () async {
                               // if the likes are being updated (because the user might've)
@@ -794,13 +825,13 @@ class _FeedPageState extends State<FeedPage> {
               },
           ),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'FriendNFlix',
-            style: TextStyle(
-              fontFamily: 'Montserrat',
-              fontWeight: FontWeight.bold,
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w900,
+              //letterSpacing: 3.0,
               color: Colors.black,
-              fontSize: 36, // increase the font size of the title
+              fontSize: 28, // increase the font size of the title
             ),
           ),
         ),

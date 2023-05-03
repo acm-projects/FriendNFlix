@@ -11,10 +11,10 @@ import 'package:fnf/profile/followingPage.dart';
 import 'PostOverview.dart';
 
 class Followers extends StatefulWidget {
-  Followers({Key? key, required this.userRef, required this.userID})
-      : super(key: key);
+  Followers({Key? key, required this.userRef, required this.userID}) : super(key: key);
   dynamic userRef;
   String userID;
+
   @override
   State<Followers> createState() => _FollowersState();
 }
@@ -22,7 +22,7 @@ class Followers extends StatefulWidget {
 class _FollowersState extends State<Followers> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   final loggedInUser = FirebaseAuth.instance.currentUser;
-  dynamic user = null;
+  var user = null;
 
   String? username;
   String mainAvatarPath = '';
@@ -38,7 +38,9 @@ class _FollowersState extends State<Followers> {
 
 
   setUserWithID() async {
-    for (dynamic rf in widget.userRef.data()["followers"]) {
+    var followersDynamic = widget.userRef.data()["followers"];
+    if(followersDynamic == null) followersDynamic = [];
+    for (dynamic rf in followersDynamic) {
       followers.add(rf.toString());
     }
     usernames = await DatabaseService().getUsernamesFromIds(followers);
@@ -278,25 +280,30 @@ class _FollowersState extends State<Followers> {
   }
 
   setup() async {
-    await getFollowers(widget.userID!);
-    await getUsername(widget.userID!);
     await setUserWithID();
     await setAvatarPath();
+    await getFollowers(widget.userID!);
+    await getUsername(widget.userID!);
     buildProfileWidgets();
   }
 
   @override
   void initState() {
-    getFollowers(widget.userID!);
-    getUsername(widget.userID!);
     setup();
     super.initState();
   }
 
   setAvatarPath(){
     var userData = user.data();
+    print("userdata");
+    print(userData);
     var pathDynamic = userData["avatarPath"];
-    if(pathDynamic != null) mainAvatarPath = pathDynamic.toString();
+    if(pathDynamic != null) {
+      mainAvatarPath = pathDynamic.toString();
+      print("tagggg");
+      print(mainAvatarPath);
+    } else
+      print("getting here!!!");
   }
 
 

@@ -224,6 +224,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../profile/otherProfile.dart';
 import '../services/navBar.dart';
@@ -250,7 +251,6 @@ class _SearchPageState extends State<SearchPage> {
     print("matching users objects");
     print(_matchingUsers);
 
-
     for (dynamic user in _matchingUsers) {
       print("another");
       var userRef = _db.collection("users").doc(user["email"]);
@@ -271,22 +271,19 @@ class _SearchPageState extends State<SearchPage> {
     print("matchingUserRefs");
     print(matchingUserRefs);
 
-    if(_matchingUsers.length == 0) {
+    if (_matchingUsers.length == 0) {
       _searchRecommendations = ListView.builder(
           itemCount: 1,
-          itemBuilder: (context, index){
-            return ListTile(title: Padding(
-                padding: EdgeInsets.only(
-                ),
-                child: Center(
-                    child: Text("0 results",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black
-                      ),)
-                )
-            ),);
-
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Padding(
+                  padding: EdgeInsets.only(),
+                  child: Center(
+                      child: Text(
+                    "0 results",
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                  ))),
+            );
           });
       return;
     }
@@ -302,13 +299,13 @@ class _SearchPageState extends State<SearchPage> {
           var userData = userSnap.data();
           print(userData);
 
+          String path = userData["avatarPath"]!;
           List<dynamic>? userFollowers = userData["followers"];
 
           // top
 
           if (userFollowers == null) userFollowers = [];
           List<String> userFollowersIds = [];
-
 
           int numPosts = numPostsForEveryUser[index];
 
@@ -324,8 +321,7 @@ class _SearchPageState extends State<SearchPage> {
           Widget buttonToDisplay; // either a follow or unfollow button
           if (userSnap.id == loggedInUser!.email) {
             buttonToDisplay = SizedBox();
-          }
-          else if (!userFollowersIds.contains(loggedInUser!.email)) {
+          } else if (!userFollowersIds.contains(loggedInUser!.email)) {
             print("making follow button");
             // make button follow button
             buttonToDisplay = ElevatedButton(
@@ -339,7 +335,7 @@ class _SearchPageState extends State<SearchPage> {
 
                   // add userRef(id) to current user's following
                   var loggedInUserRef =
-                  _db.collection("users").doc(loggedInUser!.email);
+                      _db.collection("users").doc(loggedInUser!.email);
                   await loggedInUserRef.update({
                     "following": FieldValue.arrayUnion([userRef.id])
                   });
@@ -356,15 +352,15 @@ class _SearchPageState extends State<SearchPage> {
                     height: 35,
                     child: Center(
                         child: Text(
-                          "Follow",
-                          style: TextStyle(fontSize: 18),
-                        ))));
+                      "Follow",
+                      style: TextStyle(fontSize: 18),
+                    ))));
           } else {
             // make button unfollow button
             print("making unfollow button");
             buttonToDisplay = ElevatedButton(
                 style:
-                ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                    ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
                 onPressed: () async {
                   await userRef.update({
                     "followers": FieldValue.arrayRemove([loggedInUser!.email])
@@ -372,7 +368,7 @@ class _SearchPageState extends State<SearchPage> {
 
                   // add userRef(id) to current user's following
                   var loggedInUserRef =
-                  _db.collection("users").doc(loggedInUser!.email);
+                      _db.collection("users").doc(loggedInUser!.email);
                   await loggedInUserRef.update({
                     "following": FieldValue.arrayRemove([userRef.id])
                   });
@@ -387,9 +383,9 @@ class _SearchPageState extends State<SearchPage> {
                     height: 35,
                     child: Center(
                         child: Text(
-                          "Unfollow",
-                          style: TextStyle(fontSize: 18),
-                        ))));
+                      "Unfollow",
+                      style: TextStyle(fontSize: 18),
+                    ))));
           }
 
           return ListTile(
@@ -407,38 +403,73 @@ class _SearchPageState extends State<SearchPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                    child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => otherProfile(userID: user["email"])),
-                                          //otherProfile(userID: user!.email!)),
-                                          //Profile(userID: user!.email!)),
-                                        );
-                                      },
-                                      child: Text( user["username"],
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18),
-                                      overflow: TextOverflow.ellipsis,
-                                      )
-                                    )
-                                )
+                                    padding: EdgeInsets.all(0.0),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: Color(0xFFAF3037),
+                                            width: 2)),
+                                    child: IconButton(
+                                        padding: EdgeInsets.all(0),
+                                        constraints: BoxConstraints(),
+                                        iconSize: 40,
+                                        onPressed: () {
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(builder: (context) => Profile(userID: widget.userID)),
+                                          // );
+                                        },
+                                        icon: Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                  image: AssetImage(path),
+                                                  fit: BoxFit.cover)),
+                                        ))),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Container(
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      otherProfile(
+                                                          userID:
+                                                              user["email"])),
+                                              //otherProfile(userID: user!.email!)),
+                                              //Profile(userID: user!.email!)),
+                                            );
+                                          },
+                                          child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            text: TextSpan(
+
+                                              text: '${user["username"]}',
+                                              style: GoogleFonts.montserrat(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                              children: [TextSpan(
+                                                text: '\n${numFollowers} followers, ${numPosts} posts',
+                                                style: GoogleFonts.montserrat(
+                                                  color: Colors.black,
+                                                  fontSize: 14
+                                                )
+                                              )],
+                                            ),
+                                          ))
+                                    ]))
                               ]),
                           // button to click on to go to post view
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        right: 2
-                                    ),
-                                    child: Text('${numFollowers} followers')
-                                ),
-                                Text('${numPosts} posts')
-                              ])
                         ]),
                   ],
                 )),
@@ -504,12 +535,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
         bottomNavigationBar: navBar(),
         body: Padding(
-            padding: EdgeInsets.only(
-                top: 45,
-                left: 15,
-                right: 15,
-                bottom: 15
-            ),
+            padding: EdgeInsets.only(top: 45, left: 15, right: 15, bottom: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -519,17 +545,14 @@ class _SearchPageState extends State<SearchPage> {
                     setMatchingUsers(value);
                     _setSearchRecommendations();
                   },
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18
-                  ),
+                  style: TextStyle(color: Colors.black, fontSize: 18),
                   decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 3, color: Color(0xFFAF3037))
-                      ),
+                          borderSide:
+                              BorderSide(width: 3, color: Color(0xFFAF3037))),
                       enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 3, color: Color(0xFFAF3037))
-                      ),
+                          borderSide:
+                              BorderSide(width: 3, color: Color(0xFFAF3037))),
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -537,13 +560,12 @@ class _SearchPageState extends State<SearchPage> {
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Search for a user",
-                      hintStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18
-                      ),
-                      prefixIcon: Icon(Icons.search,
+                      hintStyle: TextStyle(color: Colors.black, fontSize: 18),
+                      prefixIcon: Icon(
+                        Icons.search,
                         size: 25,
-                        color: Colors.red,),
+                        color: Colors.red,
+                      ),
                       prefixIconColor: Colors.grey),
                 ),
                 Expanded(child: _searchRecommendations)

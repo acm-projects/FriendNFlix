@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'CreatePost5.dart';
 
@@ -13,10 +14,10 @@ class CreatePost4 extends StatefulWidget {
   final String imageURL;
   CreatePost4(
       {Key? key,
-        required this.filmTitle,
-        required this.starRating,
-        required this.postBody,
-        required this.imageURL})
+      required this.filmTitle,
+      required this.starRating,
+      required this.postBody,
+      required this.imageURL})
       : super(key: key);
 
   @override
@@ -31,7 +32,7 @@ class _CreatePost4State extends State<CreatePost4> {
     fit: BoxFit.fitHeight,
   );
 
-  Color _forwardButtonColor = Color(0xFFAF3037);
+  Color _forwardButtonColor = Colors.white;
   void _forwardButtonOnPressed() {
     print("clicked on FORWARD button");
     Navigator.push(
@@ -62,8 +63,8 @@ class _CreatePost4State extends State<CreatePost4> {
               ),
               textButtonTheme: TextButtonThemeData(
                   style: TextButton.styleFrom(
-                    foregroundColor: Colors.pinkAccent,
-                  ))),
+                foregroundColor: Colors.pinkAccent,
+              ))),
           child: child!,
         );
       },
@@ -95,153 +96,156 @@ class _CreatePost4State extends State<CreatePost4> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xFFFFF7F5),
-        body: Padding(
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                // Expanded(
-                //   child: Center(
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: ListView(
-                //         children: <Widget>[
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/create_a_post_background2.png'),
+                    //'assets/images/create_a_post_background.png'
+                    fit: BoxFit.cover)),
+            child: Padding(
+              padding: EdgeInsets.only(left: 15, right: 15),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    // Expanded(
+                    //   child: Center(
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.all(10),
+                    //       child: ListView(
+                    //         children: <Widget>[
 
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0000000015,
-                ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.0000000015,
+                    ),
 
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      'Create a Post',
-                      style: TextStyle(
-                        fontFamily: 'Karla',
-                        fontSize: 40,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFFAF3037),
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.5),
-                            offset: Offset(0, 3),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Text(
+                          'Create a Post',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10,
+                                color: Colors.black.withOpacity(0.5),
+                                offset: Offset(0, 3),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-
-                Row(
-                  children: [
-                    Text(
-                      'SELECTED TITLE:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Karla',
-                        shadows: [
-                          Shadow(
-                            blurRadius: 4,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(widget.filmTitle,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontFamily: 'Karla',
+                    SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Text(
+                          'SELECTED TITLE:',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
                             shadows: [
                               Shadow(
                                 blurRadius: 4,
                                 color: Colors.black,
                               ),
                             ],
-                          )),
-                    ),
-                  ],
-                ),
-
-                Center(
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      child: Container(
-                          width: 375,
-                          height: 375,
-                          child: imageWidget
-                      )),
-                ),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
-                        child: Text(
-                          "Change watch date",
-                          style: TextStyle(fontSize: 18),
+                          ),
+                          textAlign: TextAlign.left,
                         ),
-                        onPressed: _showDatePicker,
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFAF3037))
-                      //   color: Colors.black,
-                      //   fontSize: 16,
-                      //   fontFamily: 'Karla',
-                      //   fontWeight: FontWeight.w700,
-                      //   shadows: [
-                      //   Shadow(
-                      //   blurRadius: 4,
-                      //   color: Colors.black,
-                      // ),)
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(widget.filmTitle,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontSize: 20,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 4,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                        width:
-                        1), // add some spacing between the text and the curved box
-                    Text(_watchDayString,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            height: 2,
-                            fontSize: 20))
+
+                    Center(
+                      child: Padding(
+                          padding: const EdgeInsets.only(top: 20, bottom: 20),
+                          child: Container(
+                              width: 400, height: 450, child: imageWidget)),
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                            child: Text(
+                              "Change watch date",
+                              style: GoogleFonts.montserrat(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: _showDatePicker,
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFFAF3037))
+                            //   color: Colors.black,
+                            //   fontSize: 16,
+                            //   fontFamily: 'Karla',
+                            //   fontWeight: FontWeight.w700,
+                            //   shadows: [
+                            //   Shadow(
+                            //   blurRadius: 4,
+                            //   color: Colors.black,
+                            // ),)
+                            ),
+                        SizedBox(
+                            width:
+                                1), // add some spacing between the text and the curved box
+                        Text(_watchDayString,
+                            style: GoogleFonts.montserrat(
+                              color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                height: 2,
+                                fontSize: 20))
+                      ],
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: Colors.white,
+                                  size: 40,
+                                )),
+                            IconButton(
+                                onPressed: _forwardButtonOnPressed,
+                                icon: Icon(
+                                  Icons.arrow_forward,
+                                  color:
+                                      _forwardButtonColor, // button starts disabled
+                                  size: 40,
+                                ))
+                          ],
+                        ))
                   ],
                 ),
-                Padding(
-                    padding: EdgeInsets.only(top: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: Color(0xFFAF3037),
-                              size: 30,
-                            )),
-                        IconButton(
-                            onPressed: _forwardButtonOnPressed,
-                            icon: Icon(
-                              Icons.arrow_forward,
-                              color:
-                              _forwardButtonColor, // button starts disabled
-                              size: 30,
-                            ))
-                      ],
-                    ))
-              ],
-            ),
-          ),
-        ));
+              ),
+            )));
     // ),
     //     ],
     //   ),

@@ -457,22 +457,22 @@ class _profilePage extends State<Profile> {
                     Container(
                       height: 50,
                       width: 50,
-                      color: Colors.black,
+                      color: Colors.black.withOpacity(0),
                     ),
                     Container(
                       height: 50,
                       width: 50,
-                      color: Colors.black,
+                      color: Colors.black.withOpacity(0),
                     ),
                     Container(
                       height: 50,
                       width: 50,
-                      color: Colors.black,
+                      color: Colors.black.withOpacity(0),
                     ),
                     Container(
                       height: 50,
                       width: 50,
-                      color: Colors.black,
+                      color: Colors.black.withOpacity(0),
                     ),
                   ],
                 ),

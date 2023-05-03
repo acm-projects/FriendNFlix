@@ -585,7 +585,7 @@ class _otherProfileState extends State<otherProfile> {
 
                 Row(children: const [Text(' ')]),
 
-                /*Container(
+                Container(
                   child: const Align(
                     alignment: Alignment(-0.75, 0.0),
                     child: Text(
@@ -605,28 +605,32 @@ class _otherProfileState extends State<otherProfile> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      height: 50,
-                      width: 50,
-                      color: Colors.black,
+                        child: Icon(
+                          Icons.group_add_rounded,
+                          color: Colors.black,
+                          size: 50,
+                        )
+                    ),
+                    Container(
+                        child: Icon(
+                          Icons.local_play_sharp,
+                          color: Colors.black,
+                          size: 50,
+                        )
                     ),
                     Container(
                       height: 50,
                       width: 50,
-                      color: Colors.black,
+                      color: Colors.black.withOpacity(0),
                     ),
                     Container(
                       height: 50,
                       width: 50,
-                      color: Colors.black,
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      color: Colors.black,
+                      color: Colors.black.withOpacity(0),
                     ),
                   ],
                 ),
-                Row(children: const [Text(' ')]), */
+                Row(children: const [Text(' ')]),
               ]),
         ));
     setState(() {});

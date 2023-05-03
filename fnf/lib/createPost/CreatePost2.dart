@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'CreatePost3.dart';
 
@@ -19,10 +20,8 @@ class CreatePost2 extends StatefulWidget {
 class _CreatePost2State extends State<CreatePost2> {
   var _forwardButtonOnPressed; // this will make the foward button
   Color _forwardButtonColor = Colors.grey;
-  Widget imageWidget = Image.asset(
-      'assets/images/AlpinistExample.jpg',
-      fit: BoxFit.fitHeight
-  );
+  Widget imageWidget =
+      Image.asset('assets/images/AlpinistExample.jpg', fit: BoxFit.fitHeight);
 
   // this will be an array of size 5 (one for each star) where index i coressponds
   // to the (i+1)th star. ie index 0 represents star 1. The color will be grey
@@ -71,7 +70,7 @@ class _CreatePost2State extends State<CreatePost2> {
         }
 
         // undisable foward button if since the user has selected a starRating
-        _forwardButtonColor = Color(0xFFAF3037);
+        _forwardButtonColor = Colors.white;
         _forwardButtonOnPressed = () {
           print("clicked on FORWARD button");
           Navigator.push(
@@ -119,68 +118,58 @@ class _CreatePost2State extends State<CreatePost2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xFFFFF7F5),
-        body: Padding(
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                // Expanded(
-                //   child: Center(
-                //     child: Padding(
-                //       padding: const EdgeInsets.all(10),
-                //       child: ListView(
-                //         children: <Widget>[
+        body: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                        'assets/images/create_a_post_background2.png'),
+                    //'assets/images/create_a_post_background.png'
+                    fit: BoxFit.cover)),
+            child: Padding(
+              padding: EdgeInsets.only(left: 15, right: 15),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    // Expanded(
+                    //   child: Center(
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.all(10),
+                    //       child: ListView(
+                    //         children: <Widget>[
 
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Text(
-                      'Create a Post',
-                      style: TextStyle(
-                        fontFamily: 'Karla',
-                        fontSize: 40,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFFAF3037),
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10,
-                            color: Colors.black.withOpacity(0.5),
-                            offset: Offset(0, 3),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Text(
+                          'Create a Post',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10,
+                                color: Colors.black.withOpacity(0.5),
+                                offset: Offset(0, 3),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-
-                Row(
-                  children: [
-                    Text(
-                      'SELECTED TITLE:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Karla',
-                        shadows: [
-                          Shadow(
-                            blurRadius: 4,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(widget.filmTitle,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Karla',
+                    SizedBox(height: 15),
+                    Row(
+                      children: [
+                        Text(
+                          'SELECTED TITLE:',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
                             shadows: [
                               Shadow(
                                 blurRadius: 4,
@@ -188,112 +177,124 @@ class _CreatePost2State extends State<CreatePost2> {
                               ),
                             ],
                           ),
-                          overflow: TextOverflow.ellipsis),
+                          textAlign: TextAlign.left,
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(widget.filmTitle,
+                              style: GoogleFonts.montserrat(
+                                color: Colors.white,
+                                fontSize: 20,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 4,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Container(
-                        width: 375,
-                        height: 375,
-                        child: imageWidget
+                    SizedBox(height: 15),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Container(
+                            width: 400, height: 450, child: imageWidget),
+                      ),
                     ),
-                  ),
-                ),
 
-                Row(
-                  children: [
-                    Text(
-                      '\nSELECT RATINGS:',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Karla',
-                        shadows: [
-                          Shadow(
-                            blurRadius: 4,
-                            color: Colors.black,
+                    Row(
+                      children: [
+                        Text(
+                          '\nSELECT RATINGS:',
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 4,
+                                color: Colors.black,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      textAlign: TextAlign.left,
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: _starOnPressed1,
+                          icon: Icon(
+                            Icons.star,
+                            color: _starColors[0],
+                            size: 40,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _starOnPressed2,
+                          icon: Icon(
+                            Icons.star,
+                            color: _starColors[1],
+                            size: 40,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _starOnPressed3,
+                          icon: Icon(
+                            Icons.star,
+                            color: _starColors[2],
+                            size: 40,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _starOnPressed4,
+                          icon: Icon(
+                            Icons.star,
+                            color: _starColors[3],
+                            size: 40,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: _starOnPressed5,
+                          icon: Icon(
+                            Icons.star,
+                            color: _starColors[4],
+                            size: 40,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                              size: 40,
+                            )),
+                        IconButton(
+                            onPressed: _forwardButtonOnPressed,
+                            icon: Icon(
+                              Icons.arrow_forward,
+                              color:
+                                  _forwardButtonColor, // button starts disabled
+                              size: 40,
+                            ))
+                      ],
+                    )
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: _starOnPressed1,
-                      icon: Icon(
-                        Icons.star,
-                        color: _starColors[0],
-                        size: 40,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: _starOnPressed2,
-                      icon: Icon(
-                        Icons.star,
-                        color: _starColors[1],
-                        size: 40,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: _starOnPressed3,
-                      icon: Icon(
-                        Icons.star,
-                        color: _starColors[2],
-                        size: 40,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: _starOnPressed4,
-                      icon: Icon(
-                        Icons.star,
-                        color: _starColors[3],
-                        size: 40,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: _starOnPressed5,
-                      icon: Icon(
-                        Icons.star,
-                        color: _starColors[4],
-                        size: 40,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Color(0xFFAF3037),
-                          size: 30,
-                        )),
-                    IconButton(
-                        onPressed: _forwardButtonOnPressed,
-                        icon: Icon(
-                          Icons.arrow_forward,
-                          color: _forwardButtonColor, // button starts disabled
-                          size: 30,
-                        ))
-                  ],
-                )
-              ],
-            ),
-          ),
-        ));
+              ),
+            )));
     // ),
     //     ],
     //   ),
