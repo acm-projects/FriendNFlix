@@ -2,10 +2,18 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../services/navBar.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MaterialApp(home: WantToWatchPage()));
+}
 
 class WantToWatchPage extends StatefulWidget {
   const WantToWatchPage({Key? key}) : super(key: key);
@@ -169,37 +177,12 @@ class _WantToWatchPageState extends State<WantToWatchPage> {
           ),
           elevation: 0,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'message',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'profile',
-            ),
-          ],
-        ),
+        bottomNavigationBar: navBar(),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              // Container(
-              //   child: Align(
-              //     alignment: Alignment(-0.90, -1.0),
-              //     child: Icon(
-              //       Icons.arrow_back_ios,
-              //       color: Color(0xFFAF3037),
-              //       size: 30,
-              //     ),
-              //   ),
-              // ),
               Container(
                 child: Center(
                   child: Text("Want to Watch",
