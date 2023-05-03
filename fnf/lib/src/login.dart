@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fnf/profile/Feed.dart';
+import 'package:fnf/src/Feed.dart';
 import 'package:fnf/services/auth.dart';
 import 'register.dart';
 

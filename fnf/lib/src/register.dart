@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fnf/src/login.dart';
 import 'package:fnf/services/auth.dart';
 
-import '../profile/Feed.dart';
+import 'Feed.dart';
 import 'AvatarSelection.dart';
 
 class Register extends StatefulWidget {

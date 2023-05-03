@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:googleapis/cloudasset/v1.dart';
 
-import '../profile/Feed.dart';
+import 'Feed.dart';
 
 class AvatarSelectionPage extends StatefulWidget {
   const AvatarSelectionPage({Key? key}) : super(key: key);

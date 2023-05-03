@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fnf/services/Post/PostsView.dart';
 import 'package:fnf/src/register.dart';
-import '../profile/Feed.dart';
+import 'Feed.dart';
 import '../profile/otherProfile.dart';
 import 'login.dart';
 
