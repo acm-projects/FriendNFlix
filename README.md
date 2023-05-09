@@ -5,7 +5,23 @@
 </p>
 
 # FriendNFlix
-Netflix is one of the most common and popular entertainment platforms currently available. Many of us use Netflix, but sometimes it's difficult to know what to   watch. Enter FriendNFlix. FriendNFlix is a social app that allows you and your friends to share what you're watching or have already watched on Netflix and allows you and your friends to find new things to watch.
+Netflix is one of the most common and popular entertainment platforms currently available. Many of us use Netflix, but sometimes it's difficult to know what to watch. Enter FriendNFlix. FriendNFlix is a social app that allows you and your friends to share what you're watching or have already watched on Netflix and allows you and your friends to find new things to watch.
+
+
+
+# Presentation
+[FriendNFlix Presentation.pdf](https://docs.google.com/presentation/d/1i8wmc-YkphbrvFHHwv3cAmje1dBOgoHTXAdolvIya-o/edit?usp=sharing)
+
+# Pages
+
+- General Overview/Profile
+<img src="https://github.com/acm-projects/FriendNFlix/blob/main/what%20is%20recording.gif" width="200" height="400">
+- Feed
+<img src="https://github.com/acm-projects/FriendNFlix/blob/main/feed%20recording.gif" width="200" height="400">
+- Create a Post
+<img src="https://github.com/acm-projects/FriendNFlix/blob/main/create%20a%20post%20recording.gif" width="200" height="400">
+- Watch List
+<img src="https://github.com/acm-projects/FriendNFlix/blob/main/want%20to%20watch%20recorded.gif" width="200" height="400">
 
 # MVP
 
@@ -15,7 +31,6 @@ Netflix is one of the most common and popular entertainment platforms currently 
 * Allow friends to see your list and add shows from it to their own watch list and vice versa
 * Allow friends to rate movies/shows when they finish
 * Sort by page based on ratings from friends(Your Network) and my own and suggest the top 3 to my friends on my suggestions page
-
 
 # Stretch Goals
 
