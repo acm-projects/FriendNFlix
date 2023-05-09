@@ -10,7 +10,7 @@ Netflix is one of the most common and popular entertainment platforms currently 
 
 
 # Presentation
-[FriendNFlix Presentation.pdf](https://docs.google.com/presentation/d/1i8wmc-YkphbrvFHHwv3cAmje1dBOgoHTXAdolvIya-o/edit?usp=sharing)
+[FriendNFlix Presentation](https://docs.google.com/presentation/d/1i8wmc-YkphbrvFHHwv3cAmje1dBOgoHTXAdolvIya-o/edit?usp=sharing)
 
 # Pages
 
