@@ -1,9 +1,3 @@
-![image](https://user-images.githubusercontent.com/98787282/216857765-927b5f37-908c-4539-945f-12352381af53.png)
-
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/98787282/217568242-653deeb1-7c15-4316-89d2-36a3dfa6bbfe.gif" width="500">
-</p>
-
 # FriendNFlix
 Netflix is one of the most common and popular entertainment platforms currently available. Many of us use Netflix, but sometimes it's difficult to know what to watch. Enter FriendNFlix. FriendNFlix is a social app that allows you and your friends to share what you're watching or have already watched on Netflix and allows you and your friends to find new things to watch.
 
